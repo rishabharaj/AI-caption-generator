@@ -2863,7 +2863,7 @@ a {
    HOW IT WORKS PIPELINE STYLING
    ═══════════════════════════════════════════════════════════════ */
 .how-it-works-section {
-  margin-top: var(--spacing-3xl);
+  margin-top: var(--spacing-xl);
   padding: var(--spacing-xl) var(--spacing-2xl) var(--spacing-2xl) var(--spacing-2xl);
   text-align: center;
   border-radius: var(--radius-lg);
@@ -2935,6 +2935,14 @@ a {
   margin-bottom: var(--spacing-sm);
   transition: all 0.3s var(--ease-spring);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.step-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
 }
 
 .pipeline-step:hover .step-icon {
