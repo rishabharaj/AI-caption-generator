@@ -8,11 +8,11 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <title>CapturaAI — 4-Style Video Captioning Platform</title>
 
-  <!-- Google Fonts: Inter (400, 500, 700) + JetBrains Mono (400) -->
+  <!-- Google Fonts: Inter, JetBrains Mono, Lexend, Poppins, Bangers -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;700&family=Lexend:wght@700;800&family=Poppins:wght@700;800&family=Bangers&display=swap"
     rel="stylesheet"
   />
 
@@ -138,16 +138,28 @@
               <h3 class="config-title">Subtitle placement.</h3>
             </div>
             
-            <div class="config-single">
+            <div class="config-grid">
               <!-- Caption Position dropdown -->
               <div class="config-field-group">
-                <label class="config-label" for="setting-caption-y">Caption position (Y-offset)</label>
-                <select id="setting-caption-y" class="settings-select">
-                  <option value="0.06">Low (6% from bottom)</option>
-                  <option value="0.10" selected>Medium (10% from bottom)</option>
-                  <option value="0.15">High (15% from bottom)</option>
-                  <option value="0.25">Extra High (25% from bottom)</option>
-                  <option value="0.50">Middle (50% from bottom)</option>
+                <label class="config-label" for="setting-caption-y">Position (Y-offset)</label>
+                <select id="setting-caption-y" class="settings-select" aria-label="Select caption vertical position">
+                  <option value="0.06">Low (6%)</option>
+                  <option value="0.10" selected>Medium (10%)</option>
+                  <option value="0.15">High (15%)</option>
+                  <option value="0.25">Extra High (25%)</option>
+                  <option value="0.50">Middle (50%)</option>
+                </select>
+              </div>
+
+              <!-- Caption Font dropdown -->
+              <div class="config-field-group">
+                <label class="config-label" for="setting-caption-font">Caption Font</label>
+                <select id="setting-caption-font" class="settings-select" aria-label="Select caption font">
+                  <option value="Inter" style="font-family: 'Inter', sans-serif;">Inter (Default)</option>
+                  <option value="Lexend" style="font-family: 'Lexend', sans-serif; font-weight: 700;">Lexend</option>
+                  <option value="Poppins" style="font-family: 'Poppins', sans-serif; font-weight: 700;">Poppins</option>
+                  <option value="Bangers" style="font-family: 'Bangers', cursive; font-size: 0.95rem;">Bangers</option>
+                  <option value="JetBrains Mono" style="font-family: 'JetBrains Mono', monospace;">JetBrains</option>
                 </select>
               </div>
             </div>

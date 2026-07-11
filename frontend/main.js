@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initZipModal();
   initHeaderUploadButton();
   initKeyboardNavigation();
+  initSettingsPanel();
 });
 
 /* ─────────────────────────────────────────────
@@ -87,6 +88,32 @@ function getApiKey() {
 function getCaptionPadding() {
   const select = document.getElementById('setting-caption-y');
   return select ? parseFloat(select.value) : 0.18;
+}
+
+/**
+ * Initializes settings panel event listeners (Y-offset, Font selection).
+ */
+function initSettingsPanel() {
+  const fontSelect = document.getElementById('setting-caption-font');
+  if (!fontSelect) return;
+
+  fontSelect.addEventListener('change', () => {
+    const selectedFont = fontSelect.value;
+    // Set CSS custom property dynamically on document body
+    document.documentElement.style.setProperty('--caption-font-family', `'${selectedFont}', sans-serif`);
+    // Style select dropdown font style
+    fontSelect.style.fontFamily = `'${selectedFont}', sans-serif`;
+    
+    // Apply optional spacing adjustments
+    if (selectedFont === 'Bangers') {
+      fontSelect.style.letterSpacing = '0.05em';
+    } else {
+      fontSelect.style.letterSpacing = 'normal';
+    }
+  });
+
+  // Trigger once on startup to sync initial value
+  fontSelect.dispatchEvent(new Event('change'));
 }
 
 /* ─────────────────────────────────────────────
