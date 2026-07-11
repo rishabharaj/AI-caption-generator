@@ -92,7 +92,7 @@ def validate_api_key(api_key: str) -> bool:
     """
     Validate the Fireworks API key format.
 
-    A valid key starts with 'fw_' and is at least 32 characters long.
+    A valid key starts with 'fw_' and is at least 20 characters long.
 
     Args:
         api_key: The API key string.
@@ -105,8 +105,8 @@ def validate_api_key(api_key: str) -> bool:
     if not api_key.startswith("fw_"):
         logger.warning("API key does not start with 'fw_'")
         return False
-    if len(api_key) < 32:
-        logger.warning("API key is too short (%d chars, need 32+)", len(api_key))
+    if len(api_key) < 20:
+        logger.warning("API key is too short (%d chars, need 20+)", len(api_key))
         return False
     return True
 

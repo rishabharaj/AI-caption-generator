@@ -11,12 +11,16 @@ from pathlib import Path
 from typing import Optional
 
 import yaml
+from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 
 # Project root is the parent of the backend directory
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CONFIG_PATH = PROJECT_ROOT / "config.yaml"
+
+# Load .env file
+load_dotenv(PROJECT_ROOT / ".env")
 
 
 @dataclass
@@ -47,8 +51,8 @@ class ModelConfig:
     """AI model configuration."""
     use_fine_tuned: bool = False
     fine_tuned_model_id: str = ""
-    base_model: str = "accounts/fireworks/models/llama-v3p1-8b-instruct"
-    max_tokens: int = 150
+    base_model: str = "accounts/fireworks/models/glm-5p2"
+    max_tokens: int = 800
     temperature: float = 0.8
 
 

@@ -259,7 +259,7 @@ async def _run_processing_pipeline(
         if has_audio:
             try:
                 audio_path = await video_processor.extract_audio(video_path, video_id)
-                result = await whisper_client.transcribe(audio_path)
+                result = await whisper_client.transcribe(audio_path, api_key=api_key)
                 transcript = result.text
                 logger.info("Transcript (%d words): %s", result.word_count, transcript[:100])
             except Exception as exc:
