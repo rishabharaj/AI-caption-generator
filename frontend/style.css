@@ -802,7 +802,7 @@ a {
 }
 
 .quadrant-card .caption-card__label {
-  display: none; /* Already shown by the style badge on the video */
+  margin-top: 0.5rem;
 }
 
 /* Download button at the bottom of the card */
