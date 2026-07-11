@@ -1343,7 +1343,7 @@ function initApiModal() {
         request_id: `vdcap_req_${Math.random().toString(36).substr(2, 9)}`,
         status: "success",
         timestamp: new Date().toISOString(),
-        model_stt: "sarvam-saaras:v3",
+        model_stt: "fireworks-whisper-v3",
         model_llm: "fireworks-ai",
         transcription: {
           text: inputVal,
