@@ -1344,7 +1344,7 @@ function initApiModal() {
         status: "success",
         timestamp: new Date().toISOString(),
         model_stt: "sarvam-saaras:v3",
-        model_llm: "fireworks-glm-5p2",
+        model_llm: "fireworks-ai",
         transcription: {
           text: inputVal,
           language_detected: "en-IN",
