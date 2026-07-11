@@ -94,6 +94,18 @@ def _get_subprocess_kwargs() -> dict[str, Any]:
     if fonts_conf.exists():
         env["FONTCONFIG_FILE"] = str(fonts_conf)
         env["FONTCONFIG_PATH"] = str(PROJECT_ROOT)
+
+    # Ensure apt-installed shared libraries are discoverable on Heroku
+    apt_lib_dirs = [
+        "/app/.apt/usr/lib/x86_64-linux-gnu",
+        "/app/.apt/usr/lib",
+        "/app/.apt/lib/x86_64-linux-gnu",
+        "/app/.apt/usr/lib/x86_64-linux-gnu/pulseaudio",
+    ]
+    existing_ld = env.get("LD_LIBRARY_PATH", "")
+    extra = ":".join(d for d in apt_lib_dirs if os.path.isdir(d))
+    if extra:
+        env["LD_LIBRARY_PATH"] = f"{extra}:{existing_ld}" if existing_ld else extra
         
     kwargs: dict[str, Any] = {"env": env}
     if sys.platform == "win32":
