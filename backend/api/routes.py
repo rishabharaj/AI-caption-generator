@@ -206,10 +206,14 @@ async def diag():
                 "-"
             ]
             ffmpeg_cmd = [get_ffmpeg_path()] + args
-            _, stdout, stderr = await run_ffmpeg_command(args, timeout=10, check=True)
-            ffmpeg_output = f"Success! stdout: {stdout}, stderr: {stderr}"
+            rc, stdout, stderr = await run_ffmpeg_command(args, timeout=10, check=False)
+            ffmpeg_output = {
+                "return_code": rc,
+                "stdout": stdout,
+                "stderr": stderr
+            }
         except Exception as exc:
-            ffmpeg_error = str(exc)
+            ffmpeg_error = f"Exception: {exc}"
             
     return {
         "project_root": str(PROJECT_ROOT),
