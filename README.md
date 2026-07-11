@@ -1,37 +1,51 @@
-# 🎬 CapturaAI — 4-Style Video Captioning Platform
+# 🎬 Vdcap.AI — 4-Style Video Captioning Platform
+
+<p align="center">
+  <img src="frontend/favicon.svg" width="100" height="100" alt="Vdcap.AI Logo" />
+</p>
 
 <p align="center">
   <strong>Generate 4 distinct caption styles for any video and compare them side-by-side</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+" />
+  <img src="https://img.shields.io/badge/FastAPI-0.100.0+-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/Fireworks_AI-API-FF6F00?style=for-the-badge&logo=ai&logoColor=white" alt="Fireworks AI" />
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
 </p>
 
 ---
 
 ## ✨ Features
 
-- **4-Quadrant Split View** — Watch the same video with 4 different caption styles burned in, playing in perfect sync
-- **4 Caption Styles** — Formal, Sarcastic, Humorous-Tech, and Humorous-NonTech
-- **Audio + Visual Analysis** — Uses Whisper for transcription + frame analysis for context
-- **No Audio? No Problem** — Falls back to visual-only analysis for mute videos
-- **Stunning Dark UI** — Glassmorphism design with smooth animations and micro-interactions
-- **Export Everything** — JSON, SRT, individual/bundled MP4s, HTML reports, master ZIP
-- **Mock AI Fallback** — Works without an API key using intelligent template-based generation
-- **Fine-tuning Ready** — Pipeline for training on MSR-VTT and ActivityNet datasets
+- **4-Quadrant Split View** — Watch the same video with 4 different caption styles burned in, playing in perfect sync.
+- **4 Caption Styles** — Formal, Sarcastic, Humorous-Tech, and Humorous-NonTech.
+- **Audio + Visual Analysis** — Uses Whisper for transcription + frame analysis for context.
+- **No Audio? No Problem** — Falls back to visual-only analysis for mute videos.
+- **Stunning Dark UI** — Glassmorphism design with smooth animations, vertical timelines, and micro-interactions.
+- **Export Everything** — JSON, SRT, individual/bundled MP4s, HTML reports, master ZIP.
+- **Mock AI Fallback** — Works without an API key using intelligent template-based generation.
+- **Fine-tuning Ready** — Pipeline for training on MSR-VTT and ActivityNet datasets.
+
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - **Python 3.10+**
-- **ffmpeg** installed and available in PATH
-  - Windows: `winget install ffmpeg` or download from [ffmpeg.org](https://ffmpeg.org/download.html)
-  - macOS: `brew install ffmpeg`
-  - Linux: `sudo apt install ffmpeg`
+- **ffmpeg** installed and available in PATH:
+  - **Windows**: `winget install ffmpeg` or download from [ffmpeg.org](https://ffmpeg.org/download.html)
+  - **macOS**: `brew install ffmpeg`
+  - **Linux**: `sudo apt install ffmpeg`
 
 ### Installation
 
 ```bash
 # Clone the repository
-cd Vdcap
+git clone https://github.com/rishabharaj/AI-caption-generator.git
+cd AI-caption-generator
 
 # Create virtual environment
 python -m venv venv
@@ -49,25 +63,17 @@ pip install -r requirements.txt
 ### Running the App
 
 ```bash
-# Start the server
+# Start the backend server
 python -m backend.main
 ```
 
 The app will be available at **http://localhost:8000**
 
-### Configuration
-
-1. Open the app in your browser
-2. Enter your **Fireworks AI API key** (starts with `fw_`) in the header input
-3. Upload a video (30s - 2min, up to 500MB)
-4. Watch the magic happen! ✨
-
-> **No API key?** The app will automatically use Mock AI to generate plausible captions.
+---
 
 ## 📂 Project Structure
 
 ```
-Vdcap/
 ├── backend/
 │   ├── main.py                 # FastAPI application entry
 │   ├── config.py               # Config loader (YAML)
@@ -98,6 +104,14 @@ Vdcap/
 │   ├── style.css               # Glassmorphism design system
 │   ├── main.js                 # Sync playback, API calls
 │   ├── animations.js           # Loading effects, particles
+│   ├── favicon.svg             # Subtitle-themed tab icon
+│   ├── images/
+│   │   ├── pipeline_hero.jpg   # 5-step pipeline infographic
+│   │   ├── step1.jpg           # Step 1 background asset
+│   │   ├── step2.jpg           # Step 2 background asset
+│   │   ├── step3.jpg           # Step 3 background asset
+│   │   ├── step4.jpg           # Step 4 background asset
+│   │   └── step5.jpg           # Step 5 background asset
 │   └── components/
 │       ├── Quadrant.js         # Video quadrant component
 │       ├── CaptionCard.js      # Caption text card component
@@ -109,14 +123,16 @@ Vdcap/
 └── README.md                   # This file
 ```
 
-## 🎨 Design
+---
+
+## 🎨 Design System
 
 The UI features a **dark glassmorphism** aesthetic with:
-- Animated gradient mesh background
-- Floating particle effects
-- Glass panels with backdrop blur
-- Smooth micro-animations on all interactions
-- Responsive layout (4-col → 2-col → 1-col)
+- Animated gradient mesh background.
+- Floating particle effects.
+- Glass panels with backdrop blur.
+- Smooth micro-animations on all interactions.
+- Responsive layout (4-col → 2-col → 1-col).
 
 ### Caption Style Colors
 | Style | Color | Hex |
@@ -125,6 +141,8 @@ The UI features a **dark glassmorphism** aesthetic with:
 | Sarcastic | 🩷 Pink | `#f472b6` |
 | Humorous-Tech | 🟣 Purple | `#a78bfa` |
 | Humorous-NonTech | 🟢 Emerald | `#34d399` |
+
+---
 
 ## 🔧 API Endpoints
 
@@ -139,13 +157,17 @@ The UI features a **dark glassmorphism** aesthetic with:
 | GET | `/api/export/srt/{video_id}/{style}` | Export SRT subtitle |
 | POST | `/api/export/full-zip/{video_id}` | Export master ZIP |
 
+---
+
 ## 🔑 API Key
 
-CapturaAI uses [Fireworks AI](https://fireworks.ai/) for caption generation.
+Vdcap.AI uses [Fireworks AI](https://fireworks.ai/) for caption generation.
 
 1. Get your API key from [fireworks.ai/account/api-keys](https://fireworks.ai/account/api-keys)
 2. Enter it in the app header (stored locally in your browser)
 3. Keys must start with `fw_` and be 32+ characters
+
+---
 
 ## 📝 License
 
