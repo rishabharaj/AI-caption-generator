@@ -6,7 +6,7 @@
   "keywords": ["fastapi", "python", "ffmpeg", "whisper", "caption-generator", "fireworks-ai"],
   "buildpacks": [
     {
-      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+      "url": "heroku-community/apt"
     },
     {
       "url": "heroku/python"
