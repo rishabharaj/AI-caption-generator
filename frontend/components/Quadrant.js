@@ -57,12 +57,7 @@ export function createQuadrant(styleKey, videoSrc, captionText = '') {
   const videoWrapper = document.createElement('div');
   videoWrapper.className = 'quadrant-video-wrapper';
 
-  // Style badge
-  const badge = document.createElement('span');
-  badge.className = `quadrant-badge quadrant-badge--${config.cssClass}`;
-  badge.textContent = config.label;
-  badge.setAttribute('aria-label', `${config.label} style`);
-  videoWrapper.appendChild(badge);
+
 
   // Individual play button
   const playBtn = document.createElement('button');

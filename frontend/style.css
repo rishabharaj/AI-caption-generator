@@ -497,7 +497,6 @@ a {
   max-width: var(--content-max-width);
   margin: 0 auto;
   padding: var(--spacing-2xl) var(--spacing-xl);
-  padding-bottom: 120px; /* space for export bar */
 }
 
 /* ─────────────────────────────────────────────
@@ -1158,10 +1157,12 @@ a {
 
 /* Caption style label */
 .caption-card__label {
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.8125rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
 .caption-card__label--formal { color: var(--style-formal); }
@@ -1236,35 +1237,52 @@ a {
    EXPORT BAR
    ───────────────────────────────────────────── */
 .export-section {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 90;
-  display: flex;
-  justify-content: center;
-  padding: var(--spacing-md) var(--spacing-xl);
-  pointer-events: none;
-  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+  width: 100%;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
 }
 
 .export-section--hidden {
-  opacity: 0;
-  transform: translateY(20px);
-  pointer-events: none;
+  display: none !important;
+}
+
+.export-container {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.25rem 2.5rem;
+  border-radius: 24px;
+  background: rgba(10, 10, 15, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 100px rgba(99, 102, 241, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(32px) !important;
+  -webkit-backdrop-filter: blur(32px) !important;
+}
+
+.export-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.35rem;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.export-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.75rem;
 }
 
 .export-bar {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md) var(--spacing-xl);
-  border-radius: var(--radius-pill);
-  pointer-events: all;
-}
-
-.export-bar:hover {
-  transform: none;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  width: 100%;
 }
 
 .export-btn {
@@ -2100,7 +2118,6 @@ a {
 
   .app-main {
     padding: var(--spacing-lg) var(--spacing-md);
-    padding-bottom: 120px;
   }
 
   .header-inner {
