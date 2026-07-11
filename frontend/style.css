@@ -1157,18 +1157,53 @@ a {
 
 /* Caption style label */
 .caption-card__label {
-  font-size: 0.8125rem;
-  font-weight: 700;
+  font-size: 0.7rem;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  display: block;
-  margin-bottom: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  margin-bottom: 0.85rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
 
-.caption-card__label--formal { color: var(--style-formal); }
-.caption-card__label--sarcastic { color: var(--style-sarcastic); }
-.caption-card__label--humorous-tech { color: var(--style-humorous-tech); }
-.caption-card__label--humorous-nontech { color: var(--style-humorous-nontech); }
+.caption-card__label::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background-color: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.caption-card__label--formal {
+  color: #818cf8;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.caption-card__label--sarcastic {
+  color: #c084fc;
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.caption-card__label--humorous-tech {
+  color: #22d3ee;
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.caption-card__label--humorous-nontech {
+  color: #f472b6;
+  background: rgba(236, 72, 153, 0.15);
+  border: 1px solid rgba(236, 72, 153, 0.3);
+}
 
 /* Caption text */
 .caption-card__text {
