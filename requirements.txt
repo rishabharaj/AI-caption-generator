@@ -1,0 +1,43 @@
+# CapturaAI - Requirements
+# ========================
+
+# Web Framework
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+
+# Data Validation
+pydantic==2.10.4
+pydantic-settings==2.7.1
+
+# HTTP Client
+httpx==0.28.1
+requests==2.32.3
+
+# YAML Configuration
+pyyaml==6.0.2
+
+# Video/Audio Processing
+opencv-python-headless==4.10.0.84
+Pillow==11.1.0
+
+# Speech Recognition
+openai-whisper
+
+
+# Fine-tuning (optional)
+# transformers==4.47.1
+# peft==0.14.0
+# torch==2.5.1
+# datasets==3.2.0
+
+# Export
+# python-zipstream-ng==1.8.0
+
+
+# Utilities
+aiofiles==24.1.0
+uuid6==2024.7.10
+
+# Development
+python-dotenv==1.0.1

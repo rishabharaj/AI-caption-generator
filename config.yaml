@@ -1,0 +1,72 @@
+# CapturaAI Configuration
+# ========================
+
+server:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+  workers: 1
+
+
+video:
+  max_file_size_mb: 500
+  min_duration_seconds: 30
+  max_duration_seconds: 120
+  allowed_formats:
+    - ".mp4"
+    - ".mov"
+    - ".avi"
+    - ".webm"
+  frames_per_second: 1
+
+  representative_frames: 8
+
+
+
+model:
+  use_fine_tuned: false
+  fine_tuned_model_id: ""
+  base_model: "accounts/fireworks/models/llama-v3p1-8b-instruct"
+  max_tokens: 150
+  temperature: 0.8
+
+fireworks:
+  base_url: "https://api.fireworks.ai/inference/v1"
+  timeout_seconds: 30
+  max_retries: 3
+
+
+caption_burning:
+  font_family: "Inter-Bold"
+  font_size: 24
+  font_color: "white"
+  stroke_color: "black"
+  stroke_width: 2
+  background_opacity: 0.5
+  position_bottom_padding_percent: 10
+  max_width_percent: 90
+  line_spacing: 4
+
+export:
+  json_indent: 2
+  report_title: "CapturaAI Export Report"
+
+storage:
+  temp_dir: "temp"
+
+
+whisper:
+  model_name: "base"  # tiny, base, small, medium, large
+
+  language: null  # null = auto-detect
+  sample_rate: 16000
+
+fine_tuning:
+  datasets:
+    - "msr-vtt"
+    - "activitynet"
+  batch_size: 8
+  learning_rate: 0.0002
+  num_epochs: 3
+  lora_rank: 16
+  lora_alpha: 32

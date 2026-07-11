@@ -1,0 +1,1 @@
+# CapturaAI Models Package
