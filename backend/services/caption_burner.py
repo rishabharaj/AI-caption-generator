@@ -202,7 +202,20 @@ class CaptionBurner:
 
         filters = []
         font = font_file or self.font_file
-        font_exists_path = font if Path(font).exists() else None
+        font_path = Path(font)
+        if not font_path.is_absolute():
+            from backend.config import PROJECT_ROOT
+            resolved_path = PROJECT_ROOT / font_path
+            if resolved_path.exists():
+                font_path = resolved_path
+
+        if not font_path.exists():
+            logger.error("Font file not found: %s. FFmpeg drawtext requires an existing font file on Heroku/Linux.", font)
+            raise FileNotFoundError(
+                f"Font file not found: '{font}'. Please make sure it is in the repository "
+                "and committed to Git so it is uploaded to production."
+            )
+        font_exists_path = str(font_path)
 
         if total_words > 0 and len(lines) > 0:
             current_time = start_time

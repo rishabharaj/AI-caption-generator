@@ -356,7 +356,8 @@ def build_drawtext_filter(
 
     # Font settings
     if font_file:
-        parts.append(f"fontfile='{font_file}'")
+        safe_path = str(Path(font_file).as_posix()).replace(":", "\\:")
+        parts.append(f"fontfile='{safe_path}'")
     parts.append(f"text='{escaped_text}'")
     parts.append(f"fontcolor={font_color}")
     parts.append(f"fontsize={font_size}")
