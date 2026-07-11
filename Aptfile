@@ -7,3 +7,12 @@ libxcb1
 libxcb-shm0
 libsndio7.0
 libxv1
+libblas3
+liblapack3
+libatlas-base-dev
+libass9
+libva2
+libva-drm2
+libva-x11-2
+libvdpau1
+libdrm2

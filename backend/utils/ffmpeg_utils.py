@@ -96,14 +96,16 @@ def _get_subprocess_kwargs() -> dict[str, Any]:
         env["FONTCONFIG_PATH"] = str(PROJECT_ROOT)
 
     # Ensure apt-installed shared libraries are discoverable on Heroku
-    apt_lib_dirs = [
-        "/app/.apt/usr/lib/x86_64-linux-gnu",
-        "/app/.apt/usr/lib",
-        "/app/.apt/lib/x86_64-linux-gnu",
-        "/app/.apt/usr/lib/x86_64-linux-gnu/pulseaudio",
-    ]
+    # Dynamically scan all lib directories under /app/.apt
+    apt_root = Path("/app/.apt")
+    apt_lib_dirs: list[str] = []
+    if apt_root.is_dir():
+        for dirpath, dirnames, filenames in os.walk(str(apt_root)):
+            # Include any directory that contains .so files or is a lib directory
+            if any(f.endswith(".so") or ".so." in f for f in filenames):
+                apt_lib_dirs.append(dirpath)
     existing_ld = env.get("LD_LIBRARY_PATH", "")
-    extra = ":".join(d for d in apt_lib_dirs if os.path.isdir(d))
+    extra = ":".join(apt_lib_dirs)
     if extra:
         env["LD_LIBRARY_PATH"] = f"{extra}:{existing_ld}" if existing_ld else extra
         
