@@ -169,6 +169,63 @@ async def upload_video(file: UploadFile = File(...)):
     )
 
 
+@router.get("/diag")
+async def diag():
+    import os
+    from backend.config import PROJECT_ROOT, settings
+    from backend.utils.ffmpeg_utils import is_ffmpeg_available, get_ffmpeg_path, run_ffmpeg_command, build_drawtext_filter
+    
+    try:
+        files = os.listdir(PROJECT_ROOT)
+    except Exception as e:
+        files = [f"Error listing files: {e}"]
+        
+    font_file = settings.caption_burner.font_file
+    font_path = PROJECT_ROOT / font_file
+    font_exists = font_path.exists()
+    font_size = font_path.stat().st_size if font_exists else 0
+    
+    # Try running a dummy ffmpeg command with the font
+    ffmpeg_error = None
+    ffmpeg_output = None
+    ffmpeg_cmd = []
+    if font_exists:
+        try:
+            drawtext = build_drawtext_filter(
+                text="Test Caption",
+                font_file=str(font_path),
+                font_size=24,
+                video_width=100,
+                video_height=100
+            )
+            args = [
+                "-f", "lavfi",
+                "-i", "color=c=black:s=100x100:d=1",
+                "-vf", drawtext,
+                "-f", "null",
+                "-"
+            ]
+            ffmpeg_cmd = [get_ffmpeg_path()] + args
+            _, stdout, stderr = await run_ffmpeg_command(args, timeout=10, check=True)
+            ffmpeg_output = f"Success! stdout: {stdout}, stderr: {stderr}"
+        except Exception as exc:
+            ffmpeg_error = str(exc)
+            
+    return {
+        "project_root": str(PROJECT_ROOT),
+        "files_in_root": files,
+        "configured_font": font_file,
+        "font_path": str(font_path),
+        "font_exists": font_exists,
+        "font_size": font_size,
+        "ffmpeg_available": is_ffmpeg_available(),
+        "ffmpeg_path": get_ffmpeg_path() if is_ffmpeg_available() else None,
+        "ffmpeg_command_tried": " ".join(ffmpeg_cmd),
+        "ffmpeg_error": ffmpeg_error,
+        "ffmpeg_output": ffmpeg_output
+    }
+
+
 # ===========================================================================
 # PROCESS
 # ===========================================================================
