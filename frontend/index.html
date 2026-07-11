@@ -17,7 +17,7 @@
   />
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=1.2" />
 </head>
 <body>
   <!-- ═══════════════════════════════════════════════════════════════
@@ -50,8 +50,7 @@
       <nav class="header-nav" aria-label="Main Navigation">
         <a href="#how-it-works" class="nav-link">How it Works</a>
         <a href="#demo-preview" class="nav-link">Styles</a>
-        <a href="#" id="nav-pricing-btn" class="nav-link">Pricing</a>
-        <a href="#" id="nav-api-btn" class="nav-link">Developer API</a>
+        <a href="#" id="nav-api-btn" class="nav-link">Developer Console</a>
       </nav>
 
       <!-- Right side actions -->
@@ -471,108 +470,123 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════════
-       PRICING PLANS MODAL
+       DEVELOPER CONSOLE & API PLAYGROUND MODAL
        ═══════════════════════════════════════════════════════════════ -->
-  <div id="pricing-modal" class="modal-backdrop modal-backdrop--hidden" role="dialog" aria-modal="true" aria-label="Pricing plans">
-    <div class="pricing-modal-card glass-panel">
-      <div class="modal-header">
-        <h3 class="modal-title">Flexible Pricing Plans</h3>
-        <button id="pricing-close-btn" class="modal-close-btn" aria-label="Close pricing modal">&times;</button>
-      </div>
-      <p class="modal-subtitle">Choose the perfect plan to speed up your content creation workflow.</p>
-      
-      <div class="pricing-grid">
-        <!-- Free Tier -->
-        <div class="pricing-card">
-          <div class="pricing-tier-badge">Starter</div>
-          <h4 class="tier-name">Free</h4>
-          <div class="tier-price">$0<span class="price-period">/month</span></div>
-          <p class="tier-desc">Perfect for testing and personal projects.</p>
-          <ul class="tier-features">
-            <li>5 videos / month</li>
-            <li>Standard base models</li>
-            <li>720p maximum resolution</li>
-            <li>Burned subtitles &amp; export</li>
-          </ul>
-          <button class="pricing-btn select-plan-btn select-plan-btn--active" data-plan="Free">Active Plan</button>
-        </div>
-
-        <!-- Creator Tier -->
-        <div class="pricing-card pricing-card--featured">
-          <div class="pricing-tier-badge pricing-tier-badge--featured">Most Popular</div>
-          <h4 class="tier-name">Creator Pro</h4>
-          <div class="tier-price">$19<span class="price-period">/month</span></div>
-          <p class="tier-desc">Supercharge your short-form videos.</p>
-          <ul class="tier-features">
-            <li>Unlimited videos</li>
-            <li>Full GLM-5/Kimi reasoning</li>
-            <li>HD 1080p rendering</li>
-            <li>No watermarks</li>
-            <li>Priority cloud rendering</li>
-          </ul>
-          <button class="pricing-btn select-plan-btn select-plan-btn--featured" data-plan="Creator Pro">Upgrade to Pro</button>
-        </div>
-
-        <!-- API Enterprise Tier -->
-        <div class="pricing-card">
-          <div class="pricing-tier-badge">Developer</div>
-          <h4 class="tier-name">Enterprise</h4>
-          <div class="tier-price">$49<span class="price-period">/month</span></div>
-          <p class="tier-desc">Integrate captioning into your custom app.</p>
-          <ul class="tier-features">
-            <li>Full API Access</li>
-            <li>20,000 API transcription mins</li>
-            <li>Custom branding templates</li>
-            <li>Dedicated cloud instances</li>
-            <li>99.9% uptime SLA</li>
-          </ul>
-          <button class="pricing-btn select-plan-btn" data-plan="Enterprise">Contact Sales</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       DEVELOPER API MODAL
-       ═══════════════════════════════════════════════════════════════ -->
-  <div id="api-docs-modal" class="modal-backdrop modal-backdrop--hidden" role="dialog" aria-modal="true" aria-label="Developer API Documentation">
+  <div id="api-docs-modal" class="modal-backdrop modal-backdrop--hidden" role="dialog" aria-modal="true" aria-label="Developer Console">
     <div class="api-modal-card glass-panel">
       <div class="modal-header">
-        <h3 class="modal-title">Developer API Docs</h3>
-        <button id="api-close-btn" class="modal-close-btn" aria-label="Close API modal">&times;</button>
+        <h3 class="modal-title">Vdcap.AI Developer Console</h3>
+        <button id="api-close-btn" class="modal-close-btn" aria-label="Close Developer Console">&times;</button>
       </div>
-      <p class="modal-subtitle">Integrate Vdcap's multi-vibe transcription engine using our REST API.</p>
+      <p class="modal-subtitle">Manage credentials, monitor API analytics, and test endpoints in real time.</p>
       
-      <div class="api-content">
-        <div class="api-method-tag"><span class="post-badge">POST</span> /api/transcribe</div>
-        <p class="api-doc-desc">Upload a video or audio clip to transcribe it via Sarvam AI and generate subtitle segments.</p>
-        
-        <h4 class="api-section-header">Request Form Data:</h4>
-        <ul class="api-params-list">
-          <li><code>file</code>: The audio or video file bytes (MP4, WEBM, WAV, MP3).</li>
-          <li><code>style</code>: Caption personality style (<code>formal</code>, <code>sarcastic</code>, <code>humorous_tech</code>, <code>humorous_non_tech</code>).</li>
-        </ul>
+      <!-- Console Tabs Navigation -->
+      <div class="console-tabs">
+        <button id="console-tab-keys" class="console-tab console-tab--active" type="button">API Keys &amp; Usage</button>
+        <button id="console-tab-docs" class="console-tab" type="button">API Documentation</button>
+        <button id="console-tab-playground" class="console-tab" type="button">Request Playground</button>
+      </div>
 
-        <h4 class="api-section-header">Example cURL Request:</h4>
-        <pre class="api-code-block"><code>curl -X POST https://api.vdcap.ai/v1/transcribe \
-  -H "api-subscription-key: your-api-key-here" \
-  -F "file=@my_video.mp4" \
+      <!-- Tab Content 1: API Keys & Usage -->
+      <div id="console-content-keys" class="console-tab-content">
+        <div class="console-key-section">
+          <label class="console-field-label">Your Live API Key</label>
+          <div class="console-key-row">
+            <input id="api-key-input" type="text" class="console-input" readonly value="vdcap_live_19f2yvfb_nrrXbWCIes8VEvQofqW62" />
+            <button id="api-key-copy-btn" class="glass-btn console-action-btn" type="button">Copy</button>
+            <button id="api-key-regen-btn" class="glass-btn console-action-btn" type="button">Regenerate</button>
+          </div>
+        </div>
+
+        <div class="console-analytics-grid">
+          <!-- Metric 1: Request Rate Limit -->
+          <div class="console-metric-card">
+            <span class="metric-label">API Rate Limit (Requests)</span>
+            <div class="metric-value-row">
+              <span class="metric-value">148</span>
+              <span class="metric-limit">/ 1,000 requests</span>
+            </div>
+            <div class="metric-progress-bar">
+              <div class="metric-progress-fill" style="width: 14.8%;"></div>
+            </div>
+          </div>
+
+          <!-- Metric 2: Data Usage -->
+          <div class="console-metric-card">
+            <span class="metric-label">Cloud Transcription Usage</span>
+            <div class="metric-value-row">
+              <span class="metric-value">42.5</span>
+              <span class="metric-limit">/ 500 mins</span>
+            </div>
+            <div class="metric-progress-bar">
+              <div class="metric-progress-fill" style="width: 8.5%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="console-system-status">
+          <span class="status-indicator-dot pulsing"></span>
+          <span class="status-text">All systems operational — REST Server running on port 8000</span>
+        </div>
+      </div>
+
+      <!-- Tab Content 2: API Documentation -->
+      <div id="console-content-docs" class="console-tab-content console-tab-content--hidden">
+        <div class="api-content">
+          <div class="api-method-tag"><span class="post-badge">POST</span> /api/transcribe</div>
+          <p class="api-doc-desc">Direct REST endpoint to transcribe short video/audio clips with Sarvam STT cloud and style them with Fireworks GLM-5.</p>
+          
+          <h4 class="api-section-header">Form Data Parameters</h4>
+          <ul class="api-params-list">
+            <li><code>file</code>: Video or audio bytes (MP4, WEBM, WAV, MP3). Max 500MB.</li>
+            <li><code>style</code>: Caption personality vibe (<code>formal</code>, <code>sarcastic</code>, <code>humorous_tech</code>, <code>humorous_non_tech</code>).</li>
+          </ul>
+
+          <h4 class="api-section-header">cURL Request Example</h4>
+          <pre class="api-code-block"><code>curl -X POST https://api.vdcap.ai/v1/transcribe \
+  -H "api-subscription-key: vdcap_live_19f2yvfb_nrrXb..." \
+  -F "file=@my_clip.mp4" \
   -F "style=sarcastic"</code></pre>
 
-        <h4 class="api-section-header">JSON Response Output:</h4>
-        <pre class="api-code-block"><code>{
-  "request_id": "req_9f3kd92a01",
+          <h4 class="api-section-header">Success Response (200 OK)</h4>
+          <pre class="api-code-block"><code>{
+  "request_id": "vdcap_req_f3a9d201",
   "text": "I got the music in me...",
-  "segments": [
-    {
-      "text": "I got the music in me",
-      "start": 0.1,
-      "end": 2.5
-    }
-  ],
-  "style": "sarcastic",
-  "caption": "A subject decided today was the perfect day to singing. Try to contain your excitement."
+  "segments": [{"text": "I got the music in me", "start": 0.1, "end": 2.5}],
+  "caption": "A subject decided today was the perfect day to sing. Groundbreaking."
 }</code></pre>
+        </div>
+      </div>
+
+      <!-- Tab Content 3: Request Playground -->
+      <div id="console-content-playground" class="console-tab-content console-tab-content--hidden">
+        <div class="playground-form">
+          <div class="playground-row">
+            <div class="config-field-group">
+              <label class="config-label" for="playground-style-select">Select Caption Vibe</label>
+              <select id="playground-style-select" class="settings-select">
+                <option value="sarcastic">Sarcastic</option>
+                <option value="formal">Formal / Narrative</option>
+                <option value="humorous_tech">Humorous (Tech / Geeky)</option>
+                <option value="humorous_non_tech">Humorous (Casual Vibe)</option>
+              </select>
+            </div>
+            <div class="config-field-group">
+              <label class="config-label" for="playground-input-text">Mock Voice Input</label>
+              <input id="playground-input-text" type="text" class="console-input" value="I got the music in me" />
+            </div>
+          </div>
+          <button id="playground-run-btn" class="pricing-btn select-plan-btn--featured" type="button" style="margin-top: 15px;">Send Test API Request</button>
+          
+          <div id="playground-output-wrapper" class="playground-output-wrapper playground-output-wrapper--hidden">
+            <h4 class="api-section-header">Live Server Output (Response JSON)</h4>
+            <div id="playground-loader" class="playground-loader playground-loader--hidden">
+              <div class="spinner"></div>
+              <span>Calling API endpoint...</span>
+            </div>
+            <pre id="playground-output-json" class="api-code-block"></pre>
+          </div>
+        </div>
       </div>
     </div>
   </div>
