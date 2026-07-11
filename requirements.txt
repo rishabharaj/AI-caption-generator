@@ -21,10 +21,7 @@ pyyaml==6.0.2
 opencv-python-headless==4.10.0.84
 Pillow==11.1.0
 
-# Speech Recognition (CPU-only to bypass Heroku slug size limits)
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.2.0+cpu
-openai-whisper
+# Speech Recognition (Cloud STT APIs are used directly, local Whisper is disabled)
 
 
 # Fine-tuning (optional)
