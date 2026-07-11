@@ -266,6 +266,35 @@ export function hideSkeletonLoader(container) {
 }
 
 /**
+ * Initializes IntersectionObserver-based scroll reveal for the
+ * How It Works timeline steps. Each step starts invisible and
+ * animates in when it enters the viewport.
+ */
+export function initHiwScrollReveal() {
+  const steps = document.querySelectorAll('.hiw-step');
+  if (!steps.length) return;
+
+  // Pause all reveal animations until in-viewport
+  steps.forEach(step => {
+    step.style.animationPlayState = 'paused';
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -60px 0px'
+  });
+
+  steps.forEach(step => observer.observe(step));
+}
+
+/**
  * Initializes all animation systems on page load.
  * Call this from main.js during app initialization.
  */
@@ -278,4 +307,5 @@ export function initAllAnimations() {
   initGradientMesh(meshContainer);
   initScrollHeaderOpacity(header);
   pageLoadAnimation();
+  initHiwScrollReveal();
 }

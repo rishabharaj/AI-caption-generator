@@ -1,18 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
   <defs>
-    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#6366f1" />
       <stop offset="50%" stop-color="#a855f7" />
       <stop offset="100%" stop-color="#ec4899" />
     </linearGradient>
+    <linearGradient id="captionGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
   </defs>
-  <!-- Main solid camera shape with transparent background -->
-  <g fill="url(#brandGradient)">
-    <!-- Camera body: a thick rounded box -->
-    <rect x="40" y="106" width="280" height="300" rx="70" />
-    <!-- Camera lens/cone: a solid polygon on the right -->
-    <path d="M320 186 L472 96 V416 L320 326 Z" />
-    <!-- A clean, bold sparkle inside the camera body -->
-    <path d="M180 186 L194 242 L250 256 L194 270 L180 326 L166 270 L110 256 L166 242 Z" fill="#ffffff" />
-  </g>
+  <!-- Rounded square background -->
+  <rect x="32" y="32" width="448" height="448" rx="96" fill="url(#brandGrad)" />
+  <!-- Play triangle -->
+  <path d="M200 148 L368 256 L200 364 Z" fill="#ffffff" opacity="0.95" />
+  <!-- Caption bar at bottom -->
+  <rect x="120" y="380" width="272" height="44" rx="22" fill="#ffffff" opacity="0.35" />
+  <!-- Caption dots (CC indicator) -->
+  <circle cx="196" cy="402" r="8" fill="#ffffff" opacity="0.8" />
+  <circle cx="228" cy="402" r="8" fill="#ffffff" opacity="0.8" />
+  <!-- AI sparkle on top-right -->
+  <path d="M380 100 L388 124 L412 132 L388 140 L380 164 L372 140 L348 132 L372 124 Z" fill="#ffffff" opacity="0.9" />
+  <path d="M420 70 L424 82 L436 86 L424 90 L420 102 L416 90 L404 86 L416 82 Z" fill="#ffffff" opacity="0.6" />
 </svg>

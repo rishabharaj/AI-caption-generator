@@ -6,7 +6,7 @@
   <meta name="description" content="Vdcap.AI — Generate 4 distinct caption styles for short video clips with synchronized quadrant playback, Fireworks Speech-to-Text, and dark glassmorphism UI." />
   <meta name="theme-color" content="#0a0a0f" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <title>Vdcap.AI — 4-Style Video Captioning Platform</title>
+  <title>Vdcap.AI</title>
 
   <!-- Google Fonts: Inter, JetBrains Mono, Lexend, Poppins, Bangers, Bebas Neue, Anton, Lilita One, Montserrat -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -38,19 +38,30 @@
       <!-- Logo -->
       <a href="#" id="header-logo" class="header-logo" aria-label="Vdcap.AI Home">
         <span class="logo-icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-            <circle cx="12" cy="13" r="4"/>
+          <svg width="28" height="28" viewBox="0 0 512 512" fill="none">
+            <defs>
+              <linearGradient id="navLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#6366f1" />
+                <stop offset="50%" stop-color="#a855f7" />
+                <stop offset="100%" stop-color="#ec4899" />
+              </linearGradient>
+            </defs>
+            <rect x="32" y="32" width="448" height="448" rx="96" fill="url(#navLogoGrad)" />
+            <path d="M200 148 L368 256 L200 364 Z" fill="#ffffff" opacity="0.95" />
+            <rect x="120" y="380" width="272" height="44" rx="22" fill="#ffffff" opacity="0.35" />
+            <circle cx="196" cy="402" r="8" fill="#ffffff" opacity="0.8" />
+            <circle cx="228" cy="402" r="8" fill="#ffffff" opacity="0.8" />
+            <path d="M380 100 L388 124 L412 132 L388 140 L380 164 L372 140 L348 132 L372 124 Z" fill="#ffffff" opacity="0.9" />
           </svg>
         </span>
-        <span class="logo-text">Vdcap<span class="logo-text--accent">.AI</span></span>
+        <span class="logo-text"><span class="logo-name">Vdcap</span><span class="logo-text--accent">.AI</span></span>
       </a>
 
       <!-- Navigation Links -->
       <nav class="header-nav" aria-label="Main Navigation">
-        <a href="#how-it-works" class="nav-link">How it Works</a>
+        <a href="#how-it-works" class="nav-link">Features</a>
         <a href="#demo-preview" class="nav-link">Styles</a>
-        <a href="#" id="nav-api-btn" class="nav-link">Developer Console</a>
+        <a href="#" id="nav-pricing-btn" class="nav-link">Pricing</a>
       </nav>
 
       <!-- Right side actions -->
@@ -201,97 +212,127 @@
       </div>
 
       <!-- ─────────────────────────────────────────────
-           HOW IT WORKS SECTION
+           HOW IT WORKS SECTION — Production Redesign
            ───────────────────────────────────────────── -->
-      <div id="how-it-works" class="how-it-works-section glass-panel">
-        <h2 class="how-it-works-title">Visual Pipeline Flow</h2>
-        <p class="how-it-works-subtitle">Vdcap.AI automates your video captioning workflow in 5 elegant stages.</p>
-        
-        <!-- Dashboard Mockup Showcase -->
-        <div class="demo-mockup-container">
-          <div class="demo-mockup-frame">
-            <div class="demo-mockup-header-dots">
-              <span class="dot-red"></span>
-              <span class="dot-yellow"></span>
-              <span class="dot-green"></span>
+      <div id="how-it-works" class="hiw-section">
+        <!-- Section Header -->
+        <div class="hiw-header">
+          <span class="hiw-eyebrow">How It Works</span>
+          <h2 class="hiw-title">From Raw Video to <span class="hiw-title-accent">Captioned Masterpiece</span></h2>
+          <p class="hiw-subtitle">Vdcap.AI automates your video captioning workflow in 5 elegant stages — powered by Fireworks AI.</p>
+        </div>
+
+        <!-- Hero Pipeline Infographic -->
+        <div class="hiw-hero-wrapper">
+          <div class="hiw-hero-frame">
+            <div class="hiw-hero-bar">
+              <span class="hiw-dot hiw-dot--red"></span>
+              <span class="hiw-dot hiw-dot--yellow"></span>
+              <span class="hiw-dot hiw-dot--green"></span>
+              <span class="hiw-hero-bar-title">pipeline-flow.vdcap.ai</span>
             </div>
-            <img src="images/demo_mockup.jpg" alt="Vdcap.AI Synchronized Subtitle Dashboard Mockup" class="demo-mockup-img" />
+            <img src="images/pipeline_hero.jpg" alt="Vdcap.AI 5-Step Pipeline Workflow Infographic" class="hiw-hero-img" loading="lazy" />
           </div>
         </div>
 
-        <div class="pipeline-flow">
-          <!-- Step 1 -->
-          <div class="pipeline-step">
-            <div class="step-badge">1</div>
-            <div class="step-icon">
-              <img src="images/step1.jpg" alt="Upload Video" class="step-image" />
+        <!-- Vertical Timeline Steps -->
+        <div class="hiw-timeline">
+          <!-- Animated center line -->
+          <div class="hiw-timeline-line" aria-hidden="true"></div>
+
+          <!-- Step 1 — LEFT -->
+          <div class="hiw-step hiw-step--left" data-step="1">
+            <div class="hiw-step-img-wrap">
+              <img src="images/step1.jpg" alt="Upload your video file to Vdcap.AI" class="hiw-step-img" loading="lazy" />
+              <div class="hiw-step-img-glow"></div>
             </div>
-            <h3 class="step-label">Upload Video</h3>
-            <p class="step-description">Drop your clip (MP4/WEBM). Audio is separated immediately.</p>
-          </div>
-          
-          <div class="pipeline-connector">
-            <svg viewBox="0 0 24 24" width="20" height="20">
-              <polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          
-          <!-- Step 2 -->
-          <div class="pipeline-step">
-            <div class="step-badge">2</div>
-            <div class="step-icon">
-              <img src="images/step2.jpg" alt="Fireworks Whisper" class="step-image" />
+            <div class="hiw-step-node" aria-hidden="true">
+              <span class="hiw-step-number">01</span>
             </div>
-            <h3 class="step-label">Fireworks Whisper</h3>
-            <p class="step-description">High-performance Speech-to-Text transcribes dialogue under 1 second.</p>
-          </div>
-          
-          <div class="pipeline-connector">
-            <svg viewBox="0 0 24 24" width="20" height="20">
-              <polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          
-          <!-- Step 3 -->
-          <div class="pipeline-step">
-            <div class="step-badge">3</div>
-            <div class="step-icon">
-              <img src="images/step3.jpg" alt="4 AI Styles" class="step-image" />
+            <div class="hiw-step-content">
+              <div class="hiw-step-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <h3 class="hiw-step-label">Upload Video</h3>
+              <p class="hiw-step-desc">Drag & drop your clip — MP4, WEBM, or MOV. Audio track is instantly extracted and separated for processing.</p>
+              <div class="hiw-step-tag">Instant Audio Extraction</div>
             </div>
-            <h3 class="step-label">4 AI Styles</h3>
-            <p class="step-description">Fireworks AI generates distinct caption personalities.</p>
           </div>
-          
-          <div class="pipeline-connector">
-            <svg viewBox="0 0 24 24" width="20" height="20">
-              <polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          
-          <!-- Step 4 -->
-          <div class="pipeline-step">
-            <div class="step-badge">4</div>
-            <div class="step-icon">
-              <img src="images/step4.jpg" alt="Synced Preview" class="step-image" />
+
+          <!-- Step 2 — RIGHT -->
+          <div class="hiw-step hiw-step--right" data-step="2">
+            <div class="hiw-step-content">
+              <div class="hiw-step-icon hiw-step-icon--blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              </div>
+              <h3 class="hiw-step-label">Fireworks Whisper STT</h3>
+              <p class="hiw-step-desc">High-performance Speech-to-Text powered by Fireworks AI transcribes every word with timestamps — under 1 second latency.</p>
+              <div class="hiw-step-tag hiw-step-tag--blue">&lt; 1s Latency</div>
             </div>
-            <h3 class="step-label">Synced Preview</h3>
-            <p class="step-description">Play and edit all 4 captioned outputs side-by-side.</p>
-          </div>
-          
-          <div class="pipeline-connector">
-            <svg viewBox="0 0 24 24" width="20" height="20">
-              <polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          
-          <!-- Step 5 -->
-          <div class="pipeline-step">
-            <div class="step-badge">5</div>
-            <div class="step-icon">
-              <img src="images/step5.jpg" alt="Burn &amp; Export" class="step-image" />
+            <div class="hiw-step-node" aria-hidden="true">
+              <span class="hiw-step-number">02</span>
             </div>
-            <h3 class="step-label">Burn &amp; Export</h3>
-            <p class="step-description">Export fully subtitled videos for TikTok, Reels, or Shorts.</p>
+            <div class="hiw-step-img-wrap">
+              <img src="images/step2.jpg" alt="Fireworks Whisper transcription engine" class="hiw-step-img" loading="lazy" />
+              <div class="hiw-step-img-glow hiw-step-img-glow--blue"></div>
+            </div>
+          </div>
+
+          <!-- Step 3 — LEFT -->
+          <div class="hiw-step hiw-step--left" data-step="3">
+            <div class="hiw-step-img-wrap">
+              <img src="images/step3.jpg" alt="4 AI caption style personalities" class="hiw-step-img" loading="lazy" />
+              <div class="hiw-step-img-glow hiw-step-img-glow--pink"></div>
+            </div>
+            <div class="hiw-step-node" aria-hidden="true">
+              <span class="hiw-step-number">03</span>
+            </div>
+            <div class="hiw-step-content">
+              <div class="hiw-step-icon hiw-step-icon--pink">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              </div>
+              <h3 class="hiw-step-label">4 AI Caption Styles</h3>
+              <p class="hiw-step-desc">Fireworks AI generates four distinct caption personalities — Formal, Sarcastic, Humorous-Tech, and Humorous-NonTech — each with unique voice.</p>
+              <div class="hiw-step-tag hiw-step-tag--pink">4 Unique Personalities</div>
+            </div>
+          </div>
+
+          <!-- Step 4 — RIGHT -->
+          <div class="hiw-step hiw-step--right" data-step="4">
+            <div class="hiw-step-content">
+              <div class="hiw-step-icon hiw-step-icon--green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <h3 class="hiw-step-label">Synced Preview</h3>
+              <p class="hiw-step-desc">Play all 4 captioned outputs side-by-side with perfectly synchronized timestamps. Edit, compare, and pick your favorite in real time.</p>
+              <div class="hiw-step-tag hiw-step-tag--green">Real-Time Side-by-Side</div>
+            </div>
+            <div class="hiw-step-node" aria-hidden="true">
+              <span class="hiw-step-number">04</span>
+            </div>
+            <div class="hiw-step-img-wrap">
+              <img src="images/step4.jpg" alt="Synced 4-panel preview" class="hiw-step-img" loading="lazy" />
+              <div class="hiw-step-img-glow hiw-step-img-glow--green"></div>
+            </div>
+          </div>
+
+          <!-- Step 5 — LEFT -->
+          <div class="hiw-step hiw-step--left" data-step="5">
+            <div class="hiw-step-img-wrap">
+              <img src="images/step5.jpg" alt="Export video with burned-in subtitles" class="hiw-step-img" loading="lazy" />
+              <div class="hiw-step-img-glow hiw-step-img-glow--amber"></div>
+            </div>
+            <div class="hiw-step-node" aria-hidden="true">
+              <span class="hiw-step-number">05</span>
+            </div>
+            <div class="hiw-step-content">
+              <div class="hiw-step-icon hiw-step-icon--amber">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </div>
+              <h3 class="hiw-step-label">Burn &amp; Export</h3>
+              <p class="hiw-step-desc">Hard-burn subtitles into your video and export in optimized formats — ready for TikTok, Instagram Reels, YouTube Shorts, or any platform.</p>
+              <div class="hiw-step-tag hiw-step-tag--amber">Multi-Platform Ready</div>
+            </div>
           </div>
         </div>
       </div>
@@ -465,122 +506,72 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════════
-       DEVELOPER CONSOLE & API PLAYGROUND MODAL
+       PRICING MODAL
        ═══════════════════════════════════════════════════════════════ -->
-  <div id="api-docs-modal" class="modal-backdrop modal-backdrop--hidden" role="dialog" aria-modal="true" aria-label="Developer Console">
-    <div class="api-modal-card glass-panel">
+  <div id="api-docs-modal" class="modal-backdrop modal-backdrop--hidden" role="dialog" aria-modal="true" aria-label="Pricing Plans">
+    <div class="api-modal-card glass-panel" style="max-width: 960px;">
       <div class="modal-header">
-        <h3 class="modal-title">Vdcap.AI Developer Console</h3>
-        <button id="api-close-btn" class="modal-close-btn" aria-label="Close Developer Console">&times;</button>
+        <h3 class="modal-title">Vdcap.AI Premium Plans</h3>
+        <button id="api-close-btn" class="modal-close-btn" aria-label="Close Pricing Modal">&times;</button>
       </div>
-      <p class="modal-subtitle">Manage credentials, monitor API analytics, and test endpoints in real time.</p>
+      <p class="modal-subtitle">Choose the perfect plan to speed up your content creation workflow. Cancel or change models anytime.</p>
       
-      <!-- Console Tabs Navigation -->
-      <div class="console-tabs">
-        <button id="console-tab-keys" class="console-tab console-tab--active" type="button">API Keys &amp; Usage</button>
-        <button id="console-tab-docs" class="console-tab" type="button">API Documentation</button>
-        <button id="console-tab-playground" class="console-tab" type="button">Request Playground</button>
-      </div>
 
-      <!-- Tab Content 1: API Keys & Usage -->
-      <div id="console-content-keys" class="console-tab-content">
-        <div class="console-key-section">
-          <label class="console-field-label">Your Live API Key</label>
-          <div class="console-key-row">
-            <input id="api-key-input" type="text" class="console-input" readonly value="vdcap_live_19f2yvfb_nrrXbWCIes8VEvQofqW62" />
-            <button id="api-key-copy-btn" class="glass-btn console-action-btn" type="button">Copy</button>
-            <button id="api-key-regen-btn" class="glass-btn console-action-btn" type="button">Regenerate</button>
-          </div>
-        </div>
-
-        <div class="console-analytics-grid">
-          <!-- Metric 1: Request Rate Limit -->
-          <div class="console-metric-card">
-            <span class="metric-label">API Rate Limit (Requests)</span>
-            <div class="metric-value-row">
-              <span class="metric-value">148</span>
-              <span class="metric-limit">/ 1,000 requests</span>
-            </div>
-            <div class="metric-progress-bar">
-              <div class="metric-progress-fill" style="width: 14.8%;"></div>
-            </div>
-          </div>
-
-          <!-- Metric 2: Data Usage -->
-          <div class="console-metric-card">
-            <span class="metric-label">Cloud Transcription Usage</span>
-            <div class="metric-value-row">
-              <span class="metric-value">42.5</span>
-              <span class="metric-limit">/ 500 mins</span>
-            </div>
-            <div class="metric-progress-bar">
-              <div class="metric-progress-fill" style="width: 8.5%;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="console-system-status">
-          <span class="status-indicator-dot pulsing"></span>
-          <span class="status-text">All systems operational — REST Server running on port 8000</span>
-        </div>
-      </div>
-
-      <!-- Tab Content 2: API Documentation -->
-      <div id="console-content-docs" class="console-tab-content console-tab-content--hidden">
-        <div class="api-content">
-          <div class="api-method-tag"><span class="post-badge">POST</span> /api/transcribe</div>
-          <p class="api-doc-desc">Direct REST endpoint to transcribe short video/audio clips with Fireworks Whisper API and style them with Fireworks AI.</p>
           
-          <h4 class="api-section-header">Form Data Parameters</h4>
-          <ul class="api-params-list">
-            <li><code>file</code>: Video or audio bytes (MP4, WEBM, WAV, MP3). Max 500MB.</li>
-            <li><code>style</code>: Caption personality vibe (<code>formal</code>, <code>sarcastic</code>, <code>humorous_tech</code>, <code>humorous_non_tech</code>).</li>
-          </ul>
-
-          <h4 class="api-section-header">cURL Request Example</h4>
-          <pre class="api-code-block"><code>curl -X POST https://api.vdcap.ai/v1/transcribe \
-  -H "api-subscription-key: vdcap_live_19f2yvfb_nrrXb..." \
-  -F "file=@my_clip.mp4" \
-  -F "style=sarcastic"</code></pre>
-
-          <h4 class="api-section-header">Success Response (200 OK)</h4>
-          <pre class="api-code-block"><code>{
-  "request_id": "vdcap_req_f3a9d201",
-  "text": "I got the music in me...",
-  "segments": [{"text": "I got the music in me", "start": 0.1, "end": 2.5}],
-  "caption": "A subject decided today was the perfect day to sing. Groundbreaking."
-}</code></pre>
+      <!-- Pricing Grid -->
+      <div class="pricing-grid">
+        <!-- Plan 1: Free -->
+        <div class="pricing-card">
+          <div class="pricing-tier-badge">Starter</div>
+          <div>
+            <h4 class="tier-name">Free Plan</h4>
+            <div class="tier-price">$0<span class="price-period">/month</span></div>
+            <p class="tier-desc">Perfect for testing the waters and casual captioning.</p>
+            <ul class="tier-features">
+              <li>5 video exports / month</li>
+              <li>Standard Whisper Speech-to-Text</li>
+              <li>Access to 2 basic caption styles</li>
+              <li>720p export quality</li>
+              <li>Includes Vdcap watermark</li>
+            </ul>
+          </div>
+          <button class="pricing-btn" type="button" onclick="document.getElementById('api-docs-modal').classList.add('modal-backdrop--hidden')">Start Free Trial</button>
         </div>
-      </div>
 
-      <!-- Tab Content 3: Request Playground -->
-      <div id="console-content-playground" class="console-tab-content console-tab-content--hidden">
-        <div class="playground-form">
-          <div class="playground-row">
-            <div class="config-field-group">
-              <label class="config-label" for="playground-style-select">Select Caption Vibe</label>
-              <select id="playground-style-select" class="settings-select">
-                <option value="sarcastic">Sarcastic</option>
-                <option value="formal">Formal / Narrative</option>
-                <option value="humorous_tech">Humorous (Tech / Geeky)</option>
-                <option value="humorous_non_tech">Humorous (Casual Vibe)</option>
-              </select>
-            </div>
-            <div class="config-field-group">
-              <label class="config-label" for="playground-input-text">Mock Voice Input</label>
-              <input id="playground-input-text" type="text" class="console-input" value="I got the music in me" />
-            </div>
+        <!-- Plan 2: Pro Creator (Featured) -->
+        <div class="pricing-card pricing-card--featured">
+          <div class="pricing-tier-badge pricing-tier-badge--featured">Most Popular</div>
+          <div>
+            <h4 class="tier-name">Pro Creator</h4>
+            <div class="tier-price">$15<span class="price-period">/month</span></div>
+            <p class="tier-desc">Turbocharge your content creation flow with full features.</p>
+            <ul class="tier-features">
+              <li>Unlimited video uploads & exports</li>
+              <li>Fireworks Whisper Ultra-fast STT</li>
+              <li>Access to all 4 AI Caption Styles</li>
+              <li>Full HD 1080p Export (No watermark)</li>
+              <li>Custom subtitle styling presets</li>
+            </ul>
           </div>
-          <button id="playground-run-btn" class="pricing-btn select-plan-btn--featured" type="button" style="margin-top: 15px;">Send Test API Request</button>
-          
-          <div id="playground-output-wrapper" class="playground-output-wrapper playground-output-wrapper--hidden">
-            <h4 class="api-section-header">Live Server Output (Response JSON)</h4>
-            <div id="playground-loader" class="playground-loader playground-loader--hidden">
-              <div class="spinner"></div>
-              <span>Calling API endpoint...</span>
-            </div>
-            <pre id="playground-output-json" class="api-code-block"></pre>
+          <button class="pricing-btn select-plan-btn--featured" type="button" style="background: var(--accent-purple); color: #fff;" onclick="alert('Thank you for choosing Pro Creator! This is a mock demo.'); document.getElementById('api-docs-modal').classList.add('modal-backdrop--hidden');">Upgrade to Pro</button>
+        </div>
+
+        <!-- Plan 3: Studio -->
+        <div class="pricing-card">
+          <div class="pricing-tier-badge">Enterprise</div>
+          <div>
+            <h4 class="tier-name">Studio Access</h4>
+            <div class="tier-price">$49<span class="price-period">/month</span></div>
+            <p class="tier-desc">For professional editing teams and agencies.</p>
+            <ul class="tier-features">
+              <li>Everything in Pro Creator</li>
+              <li>Up to 5 team members access</li>
+              <li>Custom font & watermark uploads</li>
+              <li>Developer API access key</li>
+              <li>24/7 Priority support queue</li>
+            </ul>
           </div>
+          <button class="pricing-btn" type="button" onclick="alert('Contacting sales... This is a mock demo.'); document.getElementById('api-docs-modal').classList.add('modal-backdrop--hidden')">Go Studio</button>
         </div>
       </div>
     </div>

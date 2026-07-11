@@ -1222,11 +1222,11 @@ function escapeHTML(str) {
 }
 
 /**
- * Initializes the Developer Console & API Playground Modal.
+ * Initializes the Pricing & API Console Modal.
  */
 function initApiModal() {
   const modal = document.getElementById('api-docs-modal');
-  const trigger = document.getElementById('nav-api-btn');
+  const trigger = document.getElementById('nav-pricing-btn');
   const closeBtn = document.getElementById('api-close-btn');
 
   if (trigger && modal) {
@@ -1247,130 +1247,6 @@ function initApiModal() {
       if (e.target === modal) {
         modal.classList.add('modal-backdrop--hidden');
       }
-    });
-  }
-
-  // ═══════════════════════════════════════════════════════════════
-  // CONSOLE TABS SELECTION
-  // ═══════════════════════════════════════════════════════════════
-  const tabs = ['keys', 'docs', 'playground'];
-  tabs.forEach(tab => {
-    const btn = document.getElementById(`console-tab-${tab}`);
-    const content = document.getElementById(`console-content-${tab}`);
-    
-    if (btn && content) {
-      btn.addEventListener('click', () => {
-        // Deactivate all tabs
-        tabs.forEach(t => {
-          const b = document.getElementById(`console-tab-${t}`);
-          const c = document.getElementById(`console-content-${t}`);
-          if (b) b.classList.remove('console-tab--active');
-          if (c) c.classList.add('console-tab-content--hidden');
-        });
-        
-        // Activate current tab
-        btn.classList.add('console-tab--active');
-        content.classList.remove('console-tab-content--hidden');
-      });
-    }
-  });
-
-  // ═══════════════════════════════════════════════════════════════
-  // API KEY MANAGER
-  // ═══════════════════════════════════════════════════════════════
-  const keyInput = document.getElementById('api-key-input');
-  const copyBtn = document.getElementById('api-key-copy-btn');
-  const regenBtn = document.getElementById('api-key-regen-btn');
-
-  if (copyBtn && keyInput) {
-    copyBtn.addEventListener('click', () => {
-      keyInput.select();
-      keyInput.setSelectionRange(0, 99999); // For mobile devices
-      navigator.clipboard.writeText(keyInput.value)
-        .then(() => showToast('API Key copied to clipboard!', 'success'))
-        .catch(() => showToast('Failed to copy API Key.', 'warning'));
-    });
-  }
-
-  if (regenBtn && keyInput) {
-    regenBtn.addEventListener('click', () => {
-      // Generate a new random API key
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let randomPart = '';
-      for (let i = 0; i < 28; i++) {
-        randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      keyInput.value = `vdcap_live_${randomPart}`;
-      showToast('Regenerated new API key successfully!', 'success');
-    });
-  }
-
-  // ═══════════════════════════════════════════════════════════════
-  // API PLAYGROUND RUNNER (SIMULATOR)
-  // ═══════════════════════════════════════════════════════════════
-  const runBtn = document.getElementById('playground-run-btn');
-  const styleSelect = document.getElementById('playground-style-select');
-  const inputTextField = document.getElementById('playground-input-text');
-  const outputWrapper = document.getElementById('playground-output-wrapper');
-  const loader = document.getElementById('playground-loader');
-  const outputJson = document.getElementById('playground-output-json');
-
-  if (runBtn && styleSelect && inputTextField && outputWrapper && loader && outputJson) {
-    runBtn.addEventListener('click', () => {
-      // Show output wrapper and loader, hide JSON block
-      outputWrapper.classList.remove('playground-output-wrapper--hidden');
-      loader.classList.remove('playground-loader--hidden');
-      outputJson.style.display = 'none';
-      runBtn.disabled = true;
-
-      const inputVal = inputTextField.value.trim() || 'I got the music in me';
-      const selectedStyle = styleSelect.value;
-
-      // Mock Captions based on selection
-      let captionText = '';
-      if (selectedStyle === 'sarcastic') {
-        captionText = `The subject declares they have music. Groundbreaking. Try to contain your excitement.`;
-      } else if (selectedStyle === 'formal') {
-        captionText = `The sequence depicts a vocal performance, highlighting the artist's innate musical passion.`;
-      } else if (selectedStyle === 'humorous_tech') {
-        captionText = `If this vocal performance was a GitHub repository, it would have zero stars but 42 forks from confused web crawlers.`;
-      } else if (selectedStyle === 'humorous_non_tech') {
-        captionText = `Singing lyrics like they have absolutely nothing better to do on a Tuesday. Honestly, same. Pure vibes.`;
-      }
-
-      // Generate simulated response JSON
-      const mockResponse = {
-        request_id: `vdcap_req_${Math.random().toString(36).substr(2, 9)}`,
-        status: "success",
-        timestamp: new Date().toISOString(),
-        model_stt: "fireworks-whisper-v3",
-        model_llm: "fireworks-ai",
-        transcription: {
-          text: inputVal,
-          language_detected: "en-IN",
-          confidence: 0.982
-        },
-        captioning: {
-          style_requested: selectedStyle,
-          caption_output: captionText,
-          segments: [
-            {
-              text: inputVal,
-              start: 0.2,
-              end: 3.5
-            }
-          ]
-        }
-      };
-
-      // Delay response by 1.2s to simulate real server API trip
-      setTimeout(() => {
-        loader.classList.add('playground-loader--hidden');
-        outputJson.textContent = JSON.stringify(mockResponse, null, 2);
-        outputJson.style.display = 'block';
-        runBtn.disabled = false;
-        showToast('API Playground Request Success! Code: 200', 'success');
-      }, 1200);
     });
   }
 }
