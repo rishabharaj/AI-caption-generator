@@ -1,0 +1,15 @@
+{
+  "name": "vdcap-ai",
+  "description": "Vdcap.AI — 4-Style Video Captioning Platform powered by Fireworks AI and FFmpeg.",
+  "repository": "https://github.com/rishabharaj/AI-caption-generator",
+  "logo": "https://raw.githubusercontent.com/rishabharaj/AI-caption-generator/main/frontend/favicon.svg",
+  "keywords": ["fastapi", "python", "ffmpeg", "whisper", "caption-generator", "fireworks-ai"],
+  "buildpacks": [
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ]
+}
