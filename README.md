@@ -171,4 +171,4 @@ Vdcap.AI uses [Fireworks AI](https://fireworks.ai/) for caption generation.
 
 ## 📝 License
 
-Built for the Antigravity IDE + Fireworks AI Hackathon.
+Distributed under the MIT License. See `LICENSE` for more information.
