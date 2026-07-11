@@ -105,7 +105,7 @@ function initSettingsPanel() {
     fontSelect.style.fontFamily = `'${selectedFont}', sans-serif`;
     
     // Apply optional spacing adjustments
-    if (selectedFont === 'Bangers') {
+    if (selectedFont === 'Bangers' || selectedFont === 'Bebas Neue') {
       fontSelect.style.letterSpacing = '0.05em';
     } else {
       fontSelect.style.letterSpacing = 'normal';
