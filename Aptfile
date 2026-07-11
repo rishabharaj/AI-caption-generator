@@ -1,3 +1,8 @@
 ffmpeg
 libfontconfig1
 libfreetype6
+libpulse0
+libxcb1
+libxcb-shm0
+libsndio7.0
+libxv1
