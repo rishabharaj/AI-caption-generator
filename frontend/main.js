@@ -27,7 +27,7 @@ const state = {
   videoDuration: 0,
   hasAudio: true,
   isPlaying: false,
-  isSyncedPlayback: true,
+  isSyncedPlayback: false,
   syncInterval: null,
   processingModal: null,
   uploadZone: null,
