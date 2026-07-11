@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="CapturaAI — Generate 4 distinct caption styles for short video clips with synchronized quadrant playback and dark glassmorphism UI." />
+  <meta name="description" content="Vdcap.AI — Generate 4 distinct caption styles for short video clips with synchronized quadrant playback, Sarvam STT cloud, and dark glassmorphism UI." />
   <meta name="theme-color" content="#0a0a0f" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <title>CapturaAI — 4-Style Video Captioning Platform</title>
+  <title>Vdcap.AI — 4-Style Video Captioning Platform</title>
 
   <!-- Google Fonts: Inter, JetBrains Mono, Lexend, Poppins, Bangers, Bebas Neue, Anton, Lilita One, Montserrat -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -36,15 +36,23 @@
   <header id="app-header" class="app-header glass-panel" role="banner">
     <div class="header-inner">
       <!-- Logo -->
-      <a href="#" id="header-logo" class="header-logo" aria-label="CapturaAI Home">
+      <a href="#" id="header-logo" class="header-logo" aria-label="Vdcap.AI Home">
         <span class="logo-icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
             <circle cx="12" cy="13" r="4"/>
           </svg>
         </span>
-        <span class="logo-text">Captura<span class="logo-text--accent">AI</span></span>
+        <span class="logo-text">Vdcap<span class="logo-text--accent">.AI</span></span>
       </a>
+
+      <!-- Navigation Links -->
+      <nav class="header-nav" aria-label="Main Navigation">
+        <a href="#how-it-works" class="nav-link">How it Works</a>
+        <a href="#demo-preview" class="nav-link">Styles</a>
+        <a href="#" id="nav-pricing-btn" class="nav-link">Pricing</a>
+        <a href="#" id="nav-api-btn" class="nav-link">Developer API</a>
+      </nav>
 
       <!-- Right side actions -->
       <div class="header-actions">
@@ -80,10 +88,10 @@
       <div class="upload-container">
         <!-- Left Side: Interactive SaaS Introduction -->
         <div class="upload-intro-panel">
-          <h1 class="intro-title">Captura<span class="intro-title--accent">AI</span></h1>
-          <p class="intro-tagline">AI-Powered 4-Style Video Captioning</p>
+          <h1 class="intro-title">Vdcap<span class="intro-title--accent">.AI</span></h1>
+          <p class="intro-tagline">Dynamic Multi-Style Video Subtitles</p>
           <p class="intro-desc">
-            Transform your video clips with professional, AI-driven subtitles. Generate four distinct caption personalities simultaneously and review them in a synchronized quadrant player.
+            Transform your video clips into high-engagement social content. Generate four distinct caption personalities simultaneously and review them in our interactive, synchronized quadrant player.
           </p>
           
           <ul class="intro-features">
@@ -96,8 +104,8 @@
                 </svg>
               </span>
               <div class="feature-text">
-                <strong>Neural transcription.</strong>
-                <p>OpenAI Whisper converts speech to text with word-level alignment.</p>
+                <strong>Sarvam AI Cloud STT.</strong>
+                <p>High-speed, multi-lingual transcription with word-level alignment in under 1 second.</p>
               </div>
             </li>
             <li class="intro-feature-item">
@@ -193,8 +201,109 @@
         </div>
       </div>
 
+      <!-- ─────────────────────────────────────────────
+           HOW IT WORKS SECTION
+           ───────────────────────────────────────────── -->
+      <div id="how-it-works" class="how-it-works-section glass-panel">
+        <h2 class="how-it-works-title">Visual Pipeline Flow</h2>
+        <p class="how-it-works-subtitle">Vdcap.AI automates your video captioning workflow in 5 elegant stages.</p>
+        
+        <div class="pipeline-flow">
+          <!-- Step 1 -->
+          <div class="pipeline-step">
+            <div class="step-badge">1</div>
+            <div class="step-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <h3 class="step-label">Upload Video</h3>
+            <p class="step-description">Drop your clip (MP4/WEBM). Audio is separated immediately.</p>
+          </div>
+          
+          <div class="pipeline-connector">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          
+          <!-- Step 2 -->
+          <div class="pipeline-step">
+            <div class="step-badge">2</div>
+            <div class="step-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                <path d="M19 10v1a7 7 0 0 1-14 0v-1"/>
+              </svg>
+            </div>
+            <h3 class="step-label">Sarvam AI STT</h3>
+            <p class="step-description">High-performance Speech-to-Text transcribes dialogue under 1 second.</p>
+          </div>
+          
+          <div class="pipeline-connector">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          
+          <!-- Step 3 -->
+          <div class="pipeline-step">
+            <div class="step-badge">3</div>
+            <div class="step-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+            <h3 class="step-label">4 AI Styles</h3>
+            <p class="step-description">Fireworks GLM-5 generates distinct caption personalities.</p>
+          </div>
+          
+          <div class="pipeline-connector">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          
+          <!-- Step 4 -->
+          <div class="pipeline-step">
+            <div class="step-badge">4</div>
+            <div class="step-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <line x1="12" y1="3" x2="12" y2="21"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+              </svg>
+            </div>
+            <h3 class="step-label">Synced Preview</h3>
+            <p class="step-description">Play and edit all 4 captioned outputs side-by-side.</p>
+          </div>
+          
+          <div class="pipeline-connector">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          
+          <!-- Step 5 -->
+          <div class="pipeline-step">
+            <div class="step-badge">5</div>
+            <div class="step-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="8 17 12 21 16 17"/>
+                <line x1="12" y1="12" x2="12" y2="21"/>
+                <path d="M20.88 18.04A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/>
+              </svg>
+            </div>
+            <h3 class="step-label">Burn &amp; Export</h3>
+            <p class="step-description">Export fully subtitled videos for TikTok, Reels, or Shorts.</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Bottom: Demo Style Preview Grid -->
-      <div class="demo-preview-section">
+      <div id="demo-preview" class="demo-preview-section">
         <h2 class="demo-preview-title">Explore caption personality styles.</h2>
         <div class="demo-preview-grid">
           <div class="demo-card demo-card--formal">
@@ -357,6 +466,113 @@
       <div class="zip-modal__actions">
         <button id="zip-cancel-btn" class="glass-btn zip-modal__btn" type="button">Cancel</button>
         <button id="zip-confirm-btn" class="glass-btn zip-modal__btn zip-modal__btn--primary" type="button">Download ZIP</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       PRICING PLANS MODAL
+       ═══════════════════════════════════════════════════════════════ -->
+  <div id="pricing-modal" class="modal-backdrop modal-backdrop--hidden" role="dialog" aria-modal="true" aria-label="Pricing plans">
+    <div class="pricing-modal-card glass-panel">
+      <div class="modal-header">
+        <h3 class="modal-title">Flexible Pricing Plans</h3>
+        <button id="pricing-close-btn" class="modal-close-btn" aria-label="Close pricing modal">&times;</button>
+      </div>
+      <p class="modal-subtitle">Choose the perfect plan to speed up your content creation workflow.</p>
+      
+      <div class="pricing-grid">
+        <!-- Free Tier -->
+        <div class="pricing-card">
+          <div class="pricing-tier-badge">Starter</div>
+          <h4 class="tier-name">Free</h4>
+          <div class="tier-price">$0<span class="price-period">/month</span></div>
+          <p class="tier-desc">Perfect for testing and personal projects.</p>
+          <ul class="tier-features">
+            <li>5 videos / month</li>
+            <li>Standard base models</li>
+            <li>720p maximum resolution</li>
+            <li>Burned subtitles &amp; export</li>
+          </ul>
+          <button class="pricing-btn select-plan-btn select-plan-btn--active" data-plan="Free">Active Plan</button>
+        </div>
+
+        <!-- Creator Tier -->
+        <div class="pricing-card pricing-card--featured">
+          <div class="pricing-tier-badge pricing-tier-badge--featured">Most Popular</div>
+          <h4 class="tier-name">Creator Pro</h4>
+          <div class="tier-price">$19<span class="price-period">/month</span></div>
+          <p class="tier-desc">Supercharge your short-form videos.</p>
+          <ul class="tier-features">
+            <li>Unlimited videos</li>
+            <li>Full GLM-5/Kimi reasoning</li>
+            <li>HD 1080p rendering</li>
+            <li>No watermarks</li>
+            <li>Priority cloud rendering</li>
+          </ul>
+          <button class="pricing-btn select-plan-btn select-plan-btn--featured" data-plan="Creator Pro">Upgrade to Pro</button>
+        </div>
+
+        <!-- API Enterprise Tier -->
+        <div class="pricing-card">
+          <div class="pricing-tier-badge">Developer</div>
+          <h4 class="tier-name">Enterprise</h4>
+          <div class="tier-price">$49<span class="price-period">/month</span></div>
+          <p class="tier-desc">Integrate captioning into your custom app.</p>
+          <ul class="tier-features">
+            <li>Full API Access</li>
+            <li>20,000 API transcription mins</li>
+            <li>Custom branding templates</li>
+            <li>Dedicated cloud instances</li>
+            <li>99.9% uptime SLA</li>
+          </ul>
+          <button class="pricing-btn select-plan-btn" data-plan="Enterprise">Contact Sales</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       DEVELOPER API MODAL
+       ═══════════════════════════════════════════════════════════════ -->
+  <div id="api-docs-modal" class="modal-backdrop modal-backdrop--hidden" role="dialog" aria-modal="true" aria-label="Developer API Documentation">
+    <div class="api-modal-card glass-panel">
+      <div class="modal-header">
+        <h3 class="modal-title">Developer API Docs</h3>
+        <button id="api-close-btn" class="modal-close-btn" aria-label="Close API modal">&times;</button>
+      </div>
+      <p class="modal-subtitle">Integrate Vdcap's multi-vibe transcription engine using our REST API.</p>
+      
+      <div class="api-content">
+        <div class="api-method-tag"><span class="post-badge">POST</span> /api/transcribe</div>
+        <p class="api-doc-desc">Upload a video or audio clip to transcribe it via Sarvam AI and generate subtitle segments.</p>
+        
+        <h4 class="api-section-header">Request Form Data:</h4>
+        <ul class="api-params-list">
+          <li><code>file</code>: The audio or video file bytes (MP4, WEBM, WAV, MP3).</li>
+          <li><code>style</code>: Caption personality style (<code>formal</code>, <code>sarcastic</code>, <code>humorous_tech</code>, <code>humorous_non_tech</code>).</li>
+        </ul>
+
+        <h4 class="api-section-header">Example cURL Request:</h4>
+        <pre class="api-code-block"><code>curl -X POST https://api.vdcap.ai/v1/transcribe \
+  -H "api-subscription-key: your-api-key-here" \
+  -F "file=@my_video.mp4" \
+  -F "style=sarcastic"</code></pre>
+
+        <h4 class="api-section-header">JSON Response Output:</h4>
+        <pre class="api-code-block"><code>{
+  "request_id": "req_9f3kd92a01",
+  "text": "I got the music in me...",
+  "segments": [
+    {
+      "text": "I got the music in me",
+      "start": 0.1,
+      "end": 2.5
+    }
+  ],
+  "style": "sarcastic",
+  "caption": "A subject decided today was the perfect day to singing. Try to contain your excitement."
+}</code></pre>
       </div>
     </div>
   </div>

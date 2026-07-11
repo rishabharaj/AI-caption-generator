@@ -51,6 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeaderUploadButton();
   initKeyboardNavigation();
   initSettingsPanel();
+  initPricingModal();
+  initApiModal();
 });
 
 /* ─────────────────────────────────────────────
@@ -1218,4 +1220,82 @@ function escapeHTML(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+/**
+ * Initializes the Pricing Plans Modal event handlers.
+ */
+function initPricingModal() {
+  const modal = document.getElementById('pricing-modal');
+  const trigger = document.getElementById('nav-pricing-btn');
+  const closeBtn = document.getElementById('pricing-close-btn');
+
+  if (trigger && modal) {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      modal.classList.remove('modal-backdrop--hidden');
+    });
+  }
+
+  if (closeBtn && modal) {
+    closeBtn.addEventListener('click', () => {
+      modal.classList.add('modal-backdrop--hidden');
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('modal-backdrop--hidden');
+      }
+    });
+  }
+
+  const selectBtns = document.querySelectorAll('.select-plan-btn');
+  selectBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const plan = btn.getAttribute('data-plan');
+      if (plan === 'Free') {
+        showToast('Starter Free Plan is active.', 'info');
+      } else if (plan === 'Creator Pro') {
+        showToast('Upgrading to Creator Pro... (Demo Payment Flow Started)', 'success');
+        setTimeout(() => {
+          showToast('Upgrade Complete! Enjoy Unlimited high-quality GLM-5 captions.', 'success');
+        }, 1500);
+      } else if (plan === 'Enterprise') {
+        showToast('Redirecting to sales team contact forms...', 'info');
+      }
+      modal.classList.add('modal-backdrop--hidden');
+    });
+  });
+}
+
+/**
+ * Initializes the Developer API Docs Modal event handlers.
+ */
+function initApiModal() {
+  const modal = document.getElementById('api-docs-modal');
+  const trigger = document.getElementById('nav-api-btn');
+  const closeBtn = document.getElementById('api-close-btn');
+
+  if (trigger && modal) {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      modal.classList.remove('modal-backdrop--hidden');
+    });
+  }
+
+  if (closeBtn && modal) {
+    closeBtn.addEventListener('click', () => {
+      modal.classList.add('modal-backdrop--hidden');
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('modal-backdrop--hidden');
+      }
+    });
+  }
 }
