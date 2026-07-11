@@ -69,6 +69,14 @@ export function createCaptionCard(styleKey, text, options = {}) {
     /* icon */ `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>`
   );
 
+  // Download video button
+  const downloadBtn = createActionButton(
+    `download-${config.cssClass}`,
+    'Download',
+    `Download ${config.label} video`,
+    /* icon */ `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`
+  );
+
   // Character count
   const charCount = document.createElement('span');
   charCount.className = 'caption-card__charcount';
@@ -78,6 +86,7 @@ export function createCaptionCard(styleKey, text, options = {}) {
   actionsRow.appendChild(copyBtn);
   actionsRow.appendChild(editBtn);
   actionsRow.appendChild(regenBtn);
+  actionsRow.appendChild(downloadBtn);
   actionsRow.appendChild(charCount);
   card.appendChild(actionsRow);
 
@@ -149,6 +158,14 @@ export function createCaptionCard(styleKey, text, options = {}) {
   // Regenerate handler (dispatch event for main.js to handle)
   regenBtn.addEventListener('click', () => {
     card.dispatchEvent(new CustomEvent('caption-regenerate', {
+      bubbles: true,
+      detail: { style: styleKey },
+    }));
+  });
+
+  // Download handler (dispatch event for main.js to handle)
+  downloadBtn.addEventListener('click', () => {
+    card.dispatchEvent(new CustomEvent('caption-download', {
       bubbles: true,
       detail: { style: styleKey },
     }));

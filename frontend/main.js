@@ -475,8 +475,9 @@ function renderResults() {
     showToast(e.detail.message, 'error');
   });
 
-  // Listen for download events from quadrants
+  // Listen for download events from quadrants and caption cards
   document.addEventListener('quadrant-download', handleQuadrantDownload);
+  document.addEventListener('caption-download', handleQuadrantDownload);
   document.addEventListener('quadrant-play-toggle', handleQuadrantPlayToggle);
 
   showToast('Processing complete! Your 4-style captions are ready.', 'success');
