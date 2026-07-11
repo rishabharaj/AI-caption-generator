@@ -137,3 +137,10 @@ audio/
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+# Agent-specific generated files
+skills-lock.json
+*_Specification.md
+DESIGN.md
+.agents/
+*.stackdump
