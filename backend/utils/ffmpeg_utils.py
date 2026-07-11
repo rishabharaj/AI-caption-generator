@@ -84,6 +84,23 @@ def is_ffprobe_available() -> bool:
     return shutil.which("ffprobe") is not None
 
 
+def _get_subprocess_kwargs() -> dict[str, Any]:
+    """Get standard kwargs for subprocess execution including environment and Windows flags."""
+    env = os.environ.copy()
+    
+    # Check if a local fonts.conf exists in the project root to satisfy fontconfig on Heroku
+    from backend.config import PROJECT_ROOT
+    fonts_conf = PROJECT_ROOT / "fonts.conf"
+    if fonts_conf.exists():
+        env["FONTCONFIG_FILE"] = str(fonts_conf)
+        env["FONTCONFIG_PATH"] = str(PROJECT_ROOT)
+        
+    kwargs: dict[str, Any] = {"env": env}
+    if sys.platform == "win32":
+        kwargs["creationflags"] = 0x08000000  # CREATE_NO_WINDOW
+    return kwargs
+
+
 async def run_ffmpeg_command(
     args: list[str],
     timeout: int = 300,
@@ -109,10 +126,7 @@ async def run_ffmpeg_command(
 
     logger.debug("Running ffmpeg command: %s", " ".join(cmd))
 
-    # On Windows, avoid showing a console window
-    kwargs: dict[str, Any] = {}
-    if sys.platform == "win32":
-        kwargs["creationflags"] = 0x08000000  # CREATE_NO_WINDOW
+    kwargs = _get_subprocess_kwargs()
 
     try:
         process = await asyncio.create_subprocess_exec(
@@ -188,9 +202,7 @@ async def run_ffprobe_command(
 
     logger.debug("Running ffprobe command: %s", " ".join(cmd))
 
-    kwargs: dict[str, Any] = {}
-    if sys.platform == "win32":
-        kwargs["creationflags"] = 0x08000000  # CREATE_NO_WINDOW
+    kwargs = _get_subprocess_kwargs()
 
     try:
         process = await asyncio.create_subprocess_exec(
