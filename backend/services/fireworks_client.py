@@ -18,14 +18,16 @@ from backend.config import settings
 logger = logging.getLogger(__name__)
 
 # System prompts for each caption style — exactly from the specification
+# Hard limit: 100 words max for all captions
 SYSTEM_PROMPTS: dict[str, str] = {
     "formal": (
         "You are a professional documentary narrator. Write a concise video caption "
-        "in 2-3 sentences. Use formal, objective, and eloquent language with proper "
-        "grammar, sophisticated vocabulary, and a neutral tone. Focus on the key "
-        "events, actions, and visual elements described.\n\n"
+        "in 2-3 sentences (100 words maximum). Use formal, objective, and eloquent "
+        "language with proper grammar, sophisticated vocabulary, and a neutral tone. "
+        "Focus on the key events, actions, and visual elements described.\n\n"
         "CRITICAL RULES:\n"
         "- Output ONLY the final caption text.\n"
+        "- Maximum 100 words. Be concise.\n"
         "- Do NOT include any analysis, reasoning, thought process, bullet points, "
         "labels, or meta-commentary.\n"
         "- Do NOT reference the prompt, frames, or instructions.\n"
@@ -35,7 +37,7 @@ SYSTEM_PROMPTS: dict[str, str] = {
     "sarcastic": (
         "You are a witty, sarcastic commentator. Write a dry, ironic caption "
         "about this video. Use understated humor, subtle mockery, and a deadpan "
-        "tone. Make it clever but not mean-spirited. 1-2 sentences max.\n\n"
+        "tone. Make it clever but not mean-spirited. 1-2 sentences, 100 words max.\n\n"
         "CRITICAL: Output ONLY the caption text. No analysis, no reasoning, "
         "no labels, no meta-commentary."
     ),
@@ -43,7 +45,7 @@ SYSTEM_PROMPTS: dict[str, str] = {
         "You are a tech-savvy comedian. Write a funny caption with references "
         "to startups, programming, AI, Silicon Valley culture, or geek life. "
         "Use tech jargon humorously. Make it relatable to developers and tech "
-        "enthusiasts. 1-2 sentences.\n\n"
+        "enthusiasts. 1-2 sentences, 100 words max.\n\n"
         "CRITICAL: Output ONLY the caption text. No analysis, no reasoning, "
         "no labels, no meta-commentary."
     ),
@@ -51,7 +53,7 @@ SYSTEM_PROMPTS: dict[str, str] = {
         "You are a general audience comedian. Write a funny, accessible caption "
         "that anyone can understand. No tech jargon. Use observational humor, "
         "pop culture references, or witty wordplay. Keep it light and universally "
-        "funny. 1-2 sentences.\n\n"
+        "funny. 1-2 sentences, 100 words max.\n\n"
         "CRITICAL: Output ONLY the caption text. No analysis, no reasoning, "
         "no labels, no meta-commentary."
     ),
@@ -300,6 +302,24 @@ class FireworksClient:
 
         # Collapse multiple spaces/newlines into single spaces
         text = re.sub(r'\s+', ' ', text).strip()
+
+        # Enforce hard 100-word maximum
+        words = text.split()
+        if len(words) > 100:
+            # Try to cut at a sentence boundary within 100 words
+            truncated = ' '.join(words[:100])
+            # Find the last sentence-ending punctuation
+            last_period = max(
+                truncated.rfind('.'),
+                truncated.rfind('!'),
+                truncated.rfind('?'),
+            )
+            if last_period > len(truncated) // 2:
+                # Cut at the last complete sentence
+                text = truncated[:last_period + 1]
+            else:
+                # No good sentence boundary — just truncate at 100 words
+                text = truncated + '...'
 
         return text
 

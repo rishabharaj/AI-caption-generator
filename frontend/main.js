@@ -886,6 +886,14 @@ async function handleRegenerateCaption(e) {
   const textEl = document.getElementById(`caption-text-${config.cssClass}`);
   if (!textEl) return;
 
+  // Prevent double-clicks: disable the regenerate button during the call
+  const regenBtn = document.getElementById(`regen-${config.cssClass}`);
+  if (regenBtn) {
+    if (regenBtn.disabled) return; // Already regenerating
+    regenBtn.disabled = true;
+    regenBtn.classList.add('caption-action-btn--loading');
+  }
+
   // Show loading state
   const origText = textEl.textContent;
   textEl.textContent = 'Regenerating...';
@@ -898,15 +906,21 @@ async function handleRegenerateCaption(e) {
       headers: getAuthHeaders(),
     });
 
-    if (!response.ok) throw new Error('Regeneration failed');
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.detail || 'Regeneration failed');
+    }
 
     const data = await response.json();
-    const newCaption = data.caption || data.text || '';
 
-    // Update state
-    state.captions[style] = newCaption;
+    // Backend returns { caption: { text: "...", style: "...", ... } }
+    const captionObj = data.caption || {};
+    const newCaption = captionObj.text || captionObj || '';
 
-    // Update card
+    // Update state with the full caption object
+    state.captions[style] = captionObj;
+
+    // Update card text
     const card = document.getElementById(`caption-card-${config.cssClass}`);
     if (card) {
       setCaptionText(card, newCaption);
@@ -926,6 +940,12 @@ async function handleRegenerateCaption(e) {
     textEl.textContent = origText;
     textEl.style.opacity = '1';
     showToast(`Failed to regenerate ${config.label} caption: ${err.message}`, 'error');
+  } finally {
+    // Re-enable the regenerate button
+    if (regenBtn) {
+      regenBtn.disabled = false;
+      regenBtn.classList.remove('caption-action-btn--loading');
+    }
   }
 }
 

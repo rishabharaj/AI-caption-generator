@@ -1288,6 +1288,19 @@ a {
   border-color: rgba(16, 185, 129, 0.3);
 }
 
+.caption-action-btn--loading {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: wait;
+}
+.caption-action-btn--loading svg {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 /* Character count */
 .caption-card__charcount {
   font-family: var(--font-mono);
