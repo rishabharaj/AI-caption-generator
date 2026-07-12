@@ -17,6 +17,13 @@
 
 ---
 
+## 🎥 Demo
+
+Watch the demo video of Vdcap.AI in action:
+👉 **[Watch Demo Video on Google Drive](https://drive.google.com/file/d/1m-pJfh01nytF624imxM-3VgfMqjtAVpT/view?usp=drivesdk)**
+
+---
+
 ## ✨ Features
 
 - **4-Quadrant Split View** — Watch the same video with 4 different caption styles burned in, playing in perfect sync.
