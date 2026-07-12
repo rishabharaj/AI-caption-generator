@@ -6,6 +6,7 @@ Generates 4 separate MP4 files (one per caption style).
 Handles text wrapping and maintains original resolution/frame rate.
 """
 
+import asyncio
 import logging
 from pathlib import Path
 from typing import Optional
@@ -94,36 +95,43 @@ class CaptionBurner:
             CaptionStyle.HUMOROUS_NON_TECH,
         ]
 
+        # Build all burn tasks and run them concurrently
+        async def _burn_style(style: CaptionStyle) -> tuple[CaptionStyle, Path]:
+            caption = caption_set.get_caption(style)
+            if caption is None:
+                raise ValueError(f"No caption found for style {style.value}")
+            output_path = get_styled_video_path(video_id, style.value)
+            await self.burn_single(
+                video_path=video_path,
+                output_path=output_path,
+                caption_text=caption.text,
+                video_width=video_width,
+                video_height=video_height,
+                max_chars_per_line=max_chars,
+                transcript_segments=transcript_segments,
+                bottom_padding=bottom_padding,
+            )
+            return style, output_path
+
+        # Filter styles that have captions
+        tasks = []
         for style in styles:
             caption = caption_set.get_caption(style)
             if caption is None:
                 logger.warning("No caption found for style %s, skipping", style.value)
                 continue
+            tasks.append(_burn_style(style))
 
-            output_path = get_styled_video_path(video_id, style.value)
+        # Run all 4 burns concurrently (major speedup: ~4x faster)
+        burn_results = await asyncio.gather(*tasks, return_exceptions=True)
 
-            try:
-                await self.burn_single(
-                    video_path=video_path,
-                    output_path=output_path,
-                    caption_text=caption.text,
-                    video_width=video_width,
-                    video_height=video_height,
-                    max_chars_per_line=max_chars,
-                    transcript_segments=transcript_segments,
-                    bottom_padding=bottom_padding,
-                )
-                results[style.value] = output_path
-                logger.info(
-                    "Burned %s caption into %s", style.value, output_path.name,
-                )
-            except Exception as exc:
-                logger.error(
-                    "Failed to burn %s caption: %s", style.value, exc,
-                )
-                raise RuntimeError(
-                    f"Failed to burn {style.value} caption into video: {exc}"
-                ) from exc
+        for result in burn_results:
+            if isinstance(result, Exception):
+                logger.error("Caption burn failed: %s", result)
+                raise RuntimeError(f"Failed to burn caption into video: {result}") from result
+            style, output_path = result
+            results[style.value] = output_path
+            logger.info("Burned %s caption into %s", style.value, output_path.name)
 
         logger.info(
             "All %d styled videos generated for video %s",
@@ -300,8 +308,9 @@ class CaptionBurner:
             "-i", str(video_path),
             "-vf", drawtext_filter,
             "-c:v", "libx264",
-            "-preset", "fast",
-            "-crf", "23",
+            "-preset", "ultrafast",
+            "-crf", "28",
+            "-threads", "2",
             "-c:a", "copy",
             "-movflags", "+faststart",
             "-y",
