@@ -21,56 +21,44 @@ logger = logging.getLogger(__name__)
 # Hard limit: 100 words max for all captions
 SYSTEM_PROMPTS: dict[str, str] = {
     "formal": (
+        "Respond with ONLY the caption text. No reasoning. No analysis. No thinking.\n\n"
         "You are a professional documentary narrator. Write a concise video caption "
-        "in 2-3 sentences (100 words maximum). Use formal, objective, and eloquent "
-        "language with proper grammar, sophisticated vocabulary, and a neutral tone. "
-        "Focus on the key events, actions, and visual elements described.\n\n"
-        "MUTE/SILENT VIDEO RULE: If the video has no speech or transcript, you MUST "
-        "still write a rich, evocative caption. Describe the visual atmosphere, "
-        "movement, composition, setting, and mood as a documentary narrator would. "
-        "Write as though you are narrating a nature documentary or a cinematic montage. "
-        "Never say you lack information or cannot describe the video.\n\n"
-        "CRITICAL RULES:\n"
-        "- Output ONLY the final caption text.\n"
-        "- Maximum 100 words. Be concise.\n"
-        "- Do NOT include any analysis, reasoning, thought process, bullet points, "
-        "labels, or meta-commentary.\n"
-        "- Do NOT reference the prompt, frames, or instructions.\n"
-        "- Do NOT start with phrases like 'Analyze', 'The prompt says', or 'Let me'.\n"
-        "- Do NOT say you have no information, no context, or cannot describe the video.\n"
-        "- Just write the caption directly as a documentary narrator would speak it."
+        "in 2-3 sentences (100 words max). Use formal, eloquent language with "
+        "sophisticated vocabulary and a neutral tone.\n\n"
+        "If the video is silent/mute: write a rich, evocative caption about the "
+        "visual atmosphere, movement, and mood — as if narrating a cinematic montage.\n\n"
+        "NEVER output reasoning, bullet points, meta-commentary, or reference these "
+        "instructions. NEVER say you lack information. Just write the caption."
     ),
     "sarcastic": (
-        "You are a witty, sarcastic commentator. Write a dry, ironic caption "
-        "about this video. Use understated humor, subtle mockery, and a deadpan "
-        "tone. Make it clever but not mean-spirited. 1-2 sentences, 100 words max.\n\n"
-        "MUTE/SILENT VIDEO RULE: If the video has no speech, lean into the silence. "
-        "Make a witty remark about the visual-only content — the mood, the aesthetic, "
-        "the cinematic choices. Never complain about lacking information.\n\n"
-        "CRITICAL: Output ONLY the caption text. No analysis, no reasoning, "
-        "no labels, no meta-commentary."
+        "Respond with ONLY the caption text. No reasoning. No analysis. No thinking.\n\n"
+        "You are a witty, sarcastic commentator. Write a dry, ironic caption. "
+        "Use understated humor, subtle mockery, deadpan tone. Clever but not mean. "
+        "1-2 sentences, 100 words max.\n\n"
+        "If the video is silent: lean into the silence with a witty remark about "
+        "the visual aesthetic.\n\n"
+        "NEVER output reasoning, bullet points, meta-commentary, or reference these "
+        "instructions. NEVER say you lack information. Just write the caption."
     ),
     "humorous_tech": (
-        "You are a tech-savvy comedian. Write a funny caption with references "
-        "to startups, programming, AI, Silicon Valley culture, or geek life. "
-        "Use tech jargon humorously. Make it relatable to developers and tech "
-        "enthusiasts. 1-2 sentences, 100 words max.\n\n"
-        "MUTE/SILENT VIDEO RULE: If the video has no speech, riff on the silence "
-        "with tech humor — buffering jokes, muted microphones, silent deployments, "
-        "or the aesthetic of the visuals. Never say you lack context.\n\n"
-        "CRITICAL: Output ONLY the caption text. No analysis, no reasoning, "
-        "no labels, no meta-commentary."
+        "Respond with ONLY the caption text. No reasoning. No analysis. No thinking.\n\n"
+        "You are a tech-savvy comedian. Write a funny caption with references to "
+        "startups, programming, AI, or Silicon Valley culture. Use tech jargon "
+        "humorously. 1-2 sentences, 100 words max.\n\n"
+        "If the video is silent: riff on the silence with tech humor — buffering "
+        "jokes, muted mics, silent deployments.\n\n"
+        "NEVER output reasoning, bullet points, meta-commentary, or reference these "
+        "instructions. NEVER say you lack information. Just write the caption."
     ),
     "humorous_non_tech": (
-        "You are a general audience comedian. Write a funny, accessible caption "
-        "that anyone can understand. No tech jargon. Use observational humor, "
-        "pop culture references, or witty wordplay. Keep it light and universally "
-        "funny. 1-2 sentences, 100 words max.\n\n"
-        "MUTE/SILENT VIDEO RULE: If the video has no speech, use the silence as "
-        "comedy material — comment on the mood, the visual vibe, or the artistic "
-        "choices. Never say you have no information.\n\n"
-        "CRITICAL: Output ONLY the caption text. No analysis, no reasoning, "
-        "no labels, no meta-commentary."
+        "Respond with ONLY the caption text. No reasoning. No analysis. No thinking.\n\n"
+        "You are a general audience comedian. Write a funny, accessible caption. "
+        "No tech jargon. Use observational humor, pop culture references, or witty "
+        "wordplay. 1-2 sentences, 100 words max.\n\n"
+        "If the video is silent: use the silence as comedy material — comment on "
+        "the mood or visual vibe.\n\n"
+        "NEVER output reasoning, bullet points, meta-commentary, or reference these "
+        "instructions. NEVER say you lack information. Just write the caption."
     ),
 }
 
@@ -285,10 +273,10 @@ class FireworksClient:
         """
         Post-process LLM output to strip reasoning artifacts.
 
-        Some models (especially reasoning/thinking models like GLM) may
-        include chain-of-thought, bullet points, numbered lists, or
-        markdown formatting. This method strips all of that, leaving
-        only clean prose suitable for a video caption.
+        The GLM-5p2 model frequently includes extensive chain-of-thought
+        reasoning, instruction restating, and meta-commentary before
+        producing the actual caption. This method aggressively strips
+        all of that, leaving only clean prose suitable for a video caption.
 
         Args:
             raw: Raw text from the LLM response.
@@ -298,56 +286,112 @@ class FireworksClient:
         """
         text = raw.strip()
 
-        # If the output contains markdown headers or bullet analysis,
-        # try to extract just the final "caption" portion
-        # Common patterns: reasoning ends with the actual caption at the bottom
+        # ---- Phase 1: Detect and strip reasoning blocks ----
+        # These patterns indicate the model is "thinking out loud"
         reasoning_markers = [
+            # Chain-of-thought patterns
             "**Analyze", "**Role:", "**Tone", "**Content:", "**Constraint:",
             "**Input:", "* **", "**Correction", "Let me re-read",
-            "Let's re-read", "Let's try", "Let me refine",
-            "Wait,", "-> This is",
-            # Mute-video meta-commentary patterns
+            "Let's re-read", "Let's try", "Let me refine", "Let me write",
+            "Wait,", "Wait -", "But wait", "-> This is",
+            # Instruction restating
+            "The rules say", "The instructions", "the instructions",
+            "I should:", "I need to", "I must", "I'll need to",
+            "However, the instructions", "the user says",
+            # Meta-commentary about lacking info
             "I cannot describe", "I can't describe", "no visual context",
             "without seeing", "no information provided", "haven't actually",
             "nothing has been described", "cannot write a meaningful",
             "no actual description", "not provided any visual",
             "The user wants me to", "The transcript says",
+            "no specific visual", "don't have actual visual",
+            "hasn't actually provided", "Since I don't",
+            "Since no specific", "Since this is a",
+            # Model self-awareness
+            "Output ONLY", "output ONLY", "be confident",
+            "don't mention lacking", "Write a confident",
         ]
 
         has_reasoning = any(marker in text for marker in reasoning_markers)
 
         if has_reasoning:
-            # The actual caption is usually the last clean paragraph
-            # Split by double newlines and find the last prose paragraph
-            paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
-            clean_paragraphs = []
-            for para in reversed(paragraphs):
-                # Skip paragraphs that look like reasoning
-                if any(marker in para for marker in reasoning_markers):
-                    continue
-                if para.startswith(("*", "-", "1.", "2.", "3.")):
-                    continue
-                if ":" in para.split(".")[0] and len(para.split(".")[0]) < 30:
-                    # Likely a label like "Caption:" — extract after the colon
-                    after_colon = para.split(":", 1)[1].strip()
-                    if after_colon:
-                        clean_paragraphs.insert(0, after_colon)
-                        continue
-                clean_paragraphs.insert(0, para)
-
-            if clean_paragraphs:
-                text = " ".join(clean_paragraphs)
+            # Strategy 1: Look for a labeled caption (e.g., "Caption: ...")
+            caption_label_patterns = [
+                r'(?:Caption|CAPTION|Here\'s the caption|Final caption|The caption)[:\s]*["\']?(.+)',
+                r'(?:Here(?:\'s| is)(?: the| my)? (?:caption|result))[:\s]*["\']?(.+)',
+            ]
+            for pattern in caption_label_patterns:
+                match = re.search(pattern, text, re.DOTALL)
+                if match:
+                    extracted = match.group(1).strip()
+                    # Take only the first 1-3 sentences after the label
+                    sentences = re.split(r'(?<=[.!?])\s+', extracted)
+                    clean_sentences = []
+                    for s in sentences:
+                        if not any(m in s for m in reasoning_markers):
+                            clean_sentences.append(s)
+                        if len(clean_sentences) >= 3:
+                            break
+                    if clean_sentences:
+                        text = ' '.join(clean_sentences)
+                        break
             else:
-                # Fallback: just take the last non-empty line
-                lines = [l.strip() for l in raw.strip().splitlines() if l.strip()]
-                text = lines[-1] if lines else raw.strip()
+                # Strategy 2: Split into paragraphs, take the last clean one
+                paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+                clean_paragraphs = []
+                for para in reversed(paragraphs):
+                    # Skip paragraphs that contain ANY reasoning marker
+                    if any(marker in para for marker in reasoning_markers):
+                        continue
+                    # Skip bullet-point lists or numbered lists
+                    if para.startswith(("*", "-", "1.", "2.", "3.", "4.", "5.")):
+                        continue
+                    # Skip single-line labels
+                    if len(para.split()) < 4:
+                        continue
+                    clean_paragraphs.insert(0, para)
+                    # Only keep the last clean paragraph (the actual caption)
+                    break
 
+                if clean_paragraphs:
+                    text = ' '.join(clean_paragraphs)
+                else:
+                    # Strategy 3: Sentence-level filtering — take the last
+                    # 1-3 sentences that don't contain reasoning
+                    all_sentences = re.split(r'(?<=[.!?])\s+', text)
+                    clean_sentences = []
+                    for sent in reversed(all_sentences):
+                        sent = sent.strip()
+                        if not sent:
+                            continue
+                        if any(m in sent for m in reasoning_markers):
+                            continue
+                        if sent.startswith(("*", "-", "1.", "2.", "3.")):
+                            continue
+                        clean_sentences.insert(0, sent)
+                        if len(clean_sentences) >= 3:
+                            break
+
+                    if clean_sentences:
+                        text = ' '.join(clean_sentences)
+                    else:
+                        # Last resort: take the very last line
+                        lines = [l.strip() for l in raw.strip().splitlines() if l.strip()]
+                        text = lines[-1] if lines else raw.strip()
+
+        # ---- Phase 2: Clean up formatting ----
         # Remove residual markdown formatting
         text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)  # **bold**
         text = re.sub(r'\*(.+?)\*', r'\1', text)  # *italic*
         text = re.sub(r'^#+\s*', '', text)  # # headers
         text = re.sub(r'^\s*[-*]\s+', '', text, flags=re.MULTILINE)  # bullet points
         text = re.sub(r'^\s*\d+\.\s+', '', text, flags=re.MULTILINE)  # numbered lists
+
+        # Remove "Caption:" or similar labels at the start
+        text = re.sub(
+            r'^(?:Caption|CAPTION|Here\'s the caption|Final caption)[:\s]*',
+            '', text, flags=re.IGNORECASE,
+        )
 
         # Strip surrounding quotes if present
         if (text.startswith('"') and text.endswith('"')) or \
@@ -357,6 +401,7 @@ class FireworksClient:
         # Collapse multiple spaces/newlines into single spaces
         text = re.sub(r'\s+', ' ', text).strip()
 
+        # ---- Phase 3: Enforce length limit ----
         # Enforce hard 100-word maximum
         words = text.split()
         if len(words) > 100:

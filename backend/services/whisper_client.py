@@ -126,6 +126,7 @@ class WhisperClient:
     ) -> TranscriptResult:
         """
         Transcribe an audio file using Whisper Cloud APIs (Sarvam, Groq, Fireworks).
+        Each provider is tried in order; failures fall through to the next provider.
         Local Whisper fallback is disabled.
         """
         if not audio_path.exists():
@@ -137,33 +138,46 @@ class WhisperClient:
         env_path = Path(__file__).resolve().parent.parent.parent / ".env"
         load_dotenv(env_path, override=True)
 
+        errors: list[str] = []
+
         # 1. Try Sarvam Cloud Transcription if SARVAM_API_KEY is configured
         sarvam_api_key = os.environ.get("SARVAM_API_KEY", "").strip()
         if sarvam_api_key:
             try:
-                return await self._transcribe_sarvam(audio_path, sarvam_api_key)
+                result = await self._transcribe_sarvam(audio_path, sarvam_api_key)
+                logger.info("Transcription succeeded via Sarvam AI")
+                return result
             except Exception as exc:
-                logger.error("Cloud transcription via Sarvam AI failed: %s", exc)
-                raise RuntimeError(f"Sarvam AI transcription failed: {exc}") from exc
+                logger.warning("Sarvam AI transcription failed, trying next provider: %s", exc)
+                errors.append(f"Sarvam: {exc}")
 
         # 2. Try Groq Cloud Transcription if GROQ_API_KEY is configured
         groq_api_key = os.environ.get("GROQ_API_KEY", "").strip()
         if groq_api_key:
             try:
-                return await self._transcribe_groq(audio_path, groq_api_key)
+                result = await self._transcribe_groq(audio_path, groq_api_key)
+                logger.info("Transcription succeeded via Groq AI")
+                return result
             except Exception as exc:
-                logger.error("Cloud transcription via Groq AI failed: %s", exc)
-                raise RuntimeError(f"Groq AI transcription failed: {exc}") from exc
+                logger.warning("Groq AI transcription failed, trying next provider: %s", exc)
+                errors.append(f"Groq: {exc}")
 
         # 3. Try Fireworks Cloud Transcription
         if api_key:
             try:
-                return await self._transcribe_cloud(audio_path, api_key)
+                result = await self._transcribe_cloud(audio_path, api_key)
+                logger.info("Transcription succeeded via Fireworks AI")
+                return result
             except Exception as exc:
-                logger.error("Cloud transcription via Fireworks AI failed: %s", exc)
-                raise RuntimeError(f"Fireworks AI transcription failed: {exc}") from exc
+                logger.warning("Fireworks AI transcription failed: %s", exc)
+                errors.append(f"Fireworks: {exc}")
 
-        # Local Whisper fallback is disabled as requested by the user
+        # All providers failed or no keys configured
+        if errors:
+            error_summary = "; ".join(errors)
+            logger.error("All transcription providers failed: %s", error_summary)
+            raise RuntimeError(f"All transcription providers failed: {error_summary}")
+
         logger.error("No active Cloud STT API keys (Sarvam, Groq, Fireworks) were found or configured.")
         raise RuntimeError("No Cloud STT API keys configured. Local Whisper is disabled.")
 
