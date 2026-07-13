@@ -344,17 +344,14 @@ async def _run_processing_pipeline(
         _caption_sets[video_id] = caption_set
         status.advance_step(ProcessingStep.GENERATING_CAPTIONS, StepStatus.COMPLETE)
 
-        # Step 5: Burn subtitles
+        # Step 5: Burn subtitles — SKIPPED for speed
+        # Captions are rendered as CSS overlays by the frontend,
+        # so burning them into the video file is not needed.
         status.current_step = ProcessingStep.BURNING_SUBTITLES
-        status.advance_step(ProcessingStep.BURNING_SUBTITLES, StepStatus.PROCESSING)
-        await caption_burner.burn_all_styles(
-            video_path,
-            video_id,
-            caption_set,
-            transcript_segments=caption_set.transcript_segments,
-            bottom_padding=bottom_padding,
+        status.advance_step(
+            ProcessingStep.BURNING_SUBTITLES, StepStatus.SKIPPED,
+            message="Captions rendered as overlay — video burn skipped",
         )
-        status.advance_step(ProcessingStep.BURNING_SUBTITLES, StepStatus.COMPLETE)
 
         # Done
         status.status = "complete"
@@ -388,10 +385,11 @@ async def get_status(video_id: str):
 
 @router.get("/video/{video_id}/{style}")
 async def serve_styled_video(video_id: str, style: str):
-    """Serve a styled video file for playback in the browser."""
+    """Serve the original video for playback (captions rendered as CSS overlay)."""
     _validate_style(style)
-    video_path = get_styled_video_path(video_id, style)
-    if not video_path.exists():
+    # Serve original video — captions are overlaid by the frontend
+    video_path = find_original_video(video_id)
+    if not video_path:
         raise VideoNotFound(video_id)
     return FileResponse(
         video_path,
@@ -402,10 +400,11 @@ async def serve_styled_video(video_id: str, style: str):
 
 @router.get("/download/{video_id}/{style}")
 async def download_styled_video(video_id: str, style: str):
-    """Download an individual styled video as an attachment."""
+    """Download the original video as an attachment (captions rendered as overlay)."""
     _validate_style(style)
-    video_path = get_styled_video_path(video_id, style)
-    if not video_path.exists():
+    # Serve original video — captions are overlaid by the frontend
+    video_path = find_original_video(video_id)
+    if not video_path:
         raise VideoNotFound(video_id)
 
     metadata = _video_metadata.get(video_id)
@@ -480,19 +479,7 @@ async def regenerate_caption(
 
     caption_set.set_caption(CaptionStyle(style), new_caption)
 
-    # Re-burn the subtitle for this style
-    video_path = find_original_video(video_id)
-    if video_path:
-        try:
-            await caption_burner.burn_single(
-                video_path=video_path,
-                output_path=get_styled_video_path(video_id, style),
-                caption_text=new_caption.text,
-                transcript_segments=caption_set.transcript_segments,
-                bottom_padding=bottom_padding,
-            )
-        except Exception as exc:
-            logger.warning("Failed to re-burn %s caption: %s", style, exc)
+    # Video burn skipped — captions are rendered as CSS overlay by the frontend
 
     return {
         "video_id": video_id,
@@ -526,19 +513,7 @@ async def update_caption(
 
     caption_set.set_caption(CaptionStyle(style), updated_caption)
 
-    # Re-burn the subtitle for this style
-    video_path = find_original_video(video_id)
-    if video_path:
-        try:
-            await caption_burner.burn_single(
-                video_path=video_path,
-                output_path=get_styled_video_path(video_id, style),
-                caption_text=body.text,
-                transcript_segments=caption_set.transcript_segments,
-                bottom_padding=body.bottom_padding,
-            )
-        except Exception as exc:
-            logger.warning("Failed to re-burn updated %s caption: %s", style, exc)
+    # Video burn skipped — captions are rendered as CSS overlay by the frontend
 
     return {
         "video_id": video_id,
