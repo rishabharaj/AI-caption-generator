@@ -49,6 +49,32 @@ class CaptionBurner:
         self.bottom_padding = settings.caption_burner.bottom_padding_percent
         self.max_text_width = settings.caption_burner.max_text_width_percent
 
+    def _calculate_layout(self, video_width: int, video_height: int) -> tuple[int, int]:
+        """
+        Calculate the optimal font size and wrapping characters for a given video size.
+        Guarantees that the text never overflows or cuts off horizontally.
+        """
+        # Height-based dynamic size: good proportion vertically (4.5% of height)
+        target_font_size = max(24, int(video_height * 0.045))
+
+        # Absolute width-based safe limit: a line of 20 characters must fit in 80% of video width
+        # Average character width is ~0.62 * font_size (including stroke/borders)
+        max_safe_font_size = int((video_width * 0.80) / (20 * 0.62))
+        
+        # Dynamic safe font size choice
+        dynamic_font_size = min(target_font_size, max_safe_font_size)
+        dynamic_font_size = max(18, dynamic_font_size)  # Absolute minimum readable size
+
+        # Now calculate max characters per line using the selected font size
+        char_width = dynamic_font_size * 0.62
+        max_pixel_width = video_width * self.max_text_width
+        max_chars = int(max_pixel_width / char_width)
+        
+        # Clamp characters per line to reasonable readable limits
+        max_chars = max(18, min(max_chars, 80))
+        
+        return dynamic_font_size, max_chars
+
     async def burn_all_styles(
         self,
         video_path: Path,
@@ -80,15 +106,8 @@ class CaptionBurner:
         video_width = info.get("width", 1920)
         video_height = info.get("height", 1080)
 
-        # Scale font size dynamically based on video height (4.5% of height, min 24px)
-        dynamic_font_size = max(self.font_size, int(video_height * 0.045))
-
-        # Calculate max chars per line based on video width and dynamic font size
-        # Approximate: each char is ~0.6 * font_size pixels wide
-        char_width = dynamic_font_size * 0.6
-        max_pixel_width = video_width * self.max_text_width
-        max_chars = int(max_pixel_width / char_width)
-        max_chars = max(20, min(max_chars, 80))  # Clamp between 20-80
+        # Calculate safe font size and characters wrapping jointly using unified helper
+        dynamic_font_size, max_chars = self._calculate_layout(video_width, video_height)
 
         results: dict[str, Path] = {}
         styles = [
@@ -178,6 +197,18 @@ class CaptionBurner:
         """
         import re
 
+        # Get actual video dimensions dynamically to prevent mismatch on edits/regenerations
+        info = await get_video_info(video_path)
+        actual_width = info.get("width", video_width)
+        actual_height = info.get("height", video_height)
+
+        # Calculate dynamic size and wrapping characters using unified layout logic
+        calc_size, calc_max_chars = self._calculate_layout(actual_width, actual_height)
+        
+        # Use passed limit if font_size is overridden, otherwise use safe dynamic limit
+        size = font_size or calc_size
+        max_chars = max_chars_per_line if font_size is not None else calc_max_chars
+
         # Determine speech bounds
         start_time = 0.0
         end_time = 0.0
@@ -187,7 +218,6 @@ class CaptionBurner:
             end_time = transcript_segments[-1]["end"] if isinstance(transcript_segments[-1], dict) else transcript_segments[-1].end
         else:
             # Fall back to video duration
-            info = await get_video_info(video_path)
             end_time = info.get("duration", 10.0)
 
         total_duration = end_time - start_time
@@ -230,7 +260,6 @@ class CaptionBurner:
                 "and committed to Git so it is uploaded to production."
             )
         font_exists_path = str(font_path)
-        size = font_size or self.font_size
 
         if total_words > 0 and len(lines) > 0:
             current_time = start_time
@@ -242,7 +271,7 @@ class CaptionBurner:
                 # Deduct a clean 0.1s offset to prevent overlapping boundaries (standard subtitle gap)
                 line_end_clamped = max(current_time + 0.15, line_end - 0.10)
 
-                wrapped_text = wrap_text(line, max_chars_per_line)
+                wrapped_text = wrap_text(line, max_chars)
                 drawtext = build_drawtext_filter(
                     text=wrapped_text,
                     font_file=font_exists_path,
@@ -250,8 +279,8 @@ class CaptionBurner:
                     font_color=self.font_color,
                     border_width=self.border_width,
                     border_color=self.border_color,
-                    video_width=video_width,
-                    video_height=video_height,
+                    video_width=actual_width,
+                    video_height=actual_height,
                     enable=f"between(t,{current_time:.3f},{line_end_clamped:.3f})",
                     bottom_padding=bottom_padding,
                 )
@@ -259,7 +288,7 @@ class CaptionBurner:
                 current_time = line_end
         else:
             # Fallback to single static overlay
-            wrapped_text = wrap_text(caption_text, max_chars_per_line)
+            wrapped_text = wrap_text(caption_text, max_chars)
             drawtext = build_drawtext_filter(
                 text=wrapped_text,
                 font_file=font_exists_path,
@@ -267,8 +296,8 @@ class CaptionBurner:
                 font_color=self.font_color,
                 border_width=self.border_width,
                 border_color=self.border_color,
-                video_width=video_width,
-                video_height=video_height,
+                video_width=actual_width,
+                video_height=actual_height,
                 bottom_padding=bottom_padding,
             )
             filters.append(drawtext)
