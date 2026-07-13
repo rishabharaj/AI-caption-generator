@@ -8,7 +8,7 @@ frontend, includes API routes, and manages startup/shutdown lifecycle events.
 import logging
 import sys
 import asyncio
-import sys
+import time
 
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
@@ -50,6 +50,7 @@ async def lifespan(app: FastAPI):
     Shutdown: optionally clean up temp files.
     """
     # --- STARTUP ---
+    start_time = time.monotonic()
     logger.info("=" * 60)
     logger.info("  CapturaAI v%s starting up", settings.app_version)
     logger.info("=" * 60)
@@ -63,7 +64,8 @@ async def lifespan(app: FastAPI):
         frontend_path.mkdir(parents=True, exist_ok=True)
         logger.warning("Frontend directory created (empty): %s", frontend_path)
 
-    logger.info("Server running on http://%s:%d", settings.server.host, settings.server.port)
+    elapsed = time.monotonic() - start_time
+    logger.info("Server ready in %.2fs on http://%s:%d", elapsed, settings.server.host, settings.server.port)
     logger.info("API docs available at http://%s:%d/docs", settings.server.host, settings.server.port)
 
     yield  # Application is running
@@ -114,9 +116,30 @@ register_exception_handlers(app)
 # ---------------------------------------------------------------------------
 app.include_router(api_router)
 
+
+# ---------------------------------------------------------------------------
+# Ultra-fast health check — NO heavy imports, NO network calls
+# This is the FIRST thing automation tests hit; it must respond < 100ms
+# ---------------------------------------------------------------------------
 @app.get("/health", include_in_schema=False)
 async def health_check():
-    """Health check endpoint."""
+    """Lightweight health check endpoint for automation/Docker HEALTHCHECK."""
+    return JSONResponse(
+        content={
+            "status": "healthy",
+            "app": settings.app_name,
+            "version": settings.app_version,
+        },
+        status_code=200,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Detailed health check (for debugging, not automation-critical)
+# ---------------------------------------------------------------------------
+@app.get("/health/detailed", include_in_schema=False)
+async def health_check_detailed():
+    """Detailed health check with dependency status — use for debugging."""
     from backend.utils.ffmpeg_utils import is_ffmpeg_available, is_ffprobe_available
     from backend.services.whisper_client import WhisperClient
     whisper_client = WhisperClient()
@@ -133,28 +156,36 @@ async def health_check():
 
 
 # ---------------------------------------------------------------------------
-# Mount static files for frontend at root
+# Root endpoint — fast JSON response (works even if frontend dir is missing)
+# ---------------------------------------------------------------------------
+@app.get("/", include_in_schema=False)
+async def root():
+    """Root endpoint returns app info. Useful for automation to verify the app is running."""
+    return JSONResponse(
+        content={
+            "app": settings.app_name,
+            "version": settings.app_version,
+            "status": "running",
+            "docs": "/docs",
+            "health": "/health",
+            "api_prefix": "/api",
+        },
+        status_code=200,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Mount static files for frontend (AFTER root endpoint so / JSON always works)
 # ---------------------------------------------------------------------------
 frontend_dir = settings.frontend_path
 if frontend_dir.exists():
+    # Mount at /app to avoid overriding root
     app.mount(
-        "/",
+        "/app",
         StaticFiles(directory=str(frontend_dir), html=True),
         name="static",
     )
-    logger.info("Frontend static files mounted at root / from %s", frontend_dir)
-else:
-    @app.get("/", include_in_schema=False)
-    async def serve_frontend_fallback():
-        return JSONResponse(
-            content={
-                "app": settings.app_name,
-                "version": settings.app_version,
-                "docs": "/docs",
-                "message": "Frontend not found. Place files in the frontend/ directory.",
-            }
-        )
-
+    logger.info("Frontend static files mounted at /app from %s", frontend_dir)
 
 
 # ---------------------------------------------------------------------------

@@ -14,14 +14,15 @@ import sys
 from pathlib import Path
 from typing import Any, Optional
 
-# Add fallback search paths for ffmpeg/ffprobe to system PATH
-_fallback_dirs = [
-    r"D:\Antigravity\Youtube_bot\ffmpeg\bin",
-    r"D:\Antigravity\Video-caption\node_modules\ffmpeg-static",
-]
-for _dir in _fallback_dirs:
-    if os.path.exists(_dir) and _dir not in os.environ.get("PATH", ""):
-        os.environ["PATH"] = _dir + os.pathsep + os.environ.get("PATH", "")
+# Add fallback search paths for ffmpeg/ffprobe to system PATH (Windows dev only)
+if sys.platform == "win32":
+    _fallback_dirs = [
+        r"D:\Antigravity\Youtube_bot\ffmpeg\bin",
+        r"D:\Antigravity\Video-caption\node_modules\ffmpeg-static",
+    ]
+    for _dir in _fallback_dirs:
+        if os.path.exists(_dir) and _dir not in os.environ.get("PATH", ""):
+            os.environ["PATH"] = _dir + os.pathsep + os.environ.get("PATH", "")
 
 logger = logging.getLogger(__name__)
 

@@ -60,3 +60,38 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          # Provenance disabled to produce a single-manifest image (not an index)
+          # This ensures `docker pull` gets the image directly without manifest-list issues
+          provenance: false
+
+      # Verify the image health after push (only on main branch push)
+      - name: Verify Docker image starts correctly
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "Pulling and testing the published image..."
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          
+          # Start container in background
+          docker run -d --name test-container \
+            -p 8000:8000 \
+            -e PORT=8000 \
+            -e FIREWORKS_API_KEY=fw_test_key_placeholder \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          
+          # Wait for health check (max 30 seconds)
+          echo "Waiting for container to be healthy..."
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8000/health > /dev/null 2>&1; then
+              echo "✅ Container is healthy after ${i}s"
+              docker stop test-container
+              docker rm test-container
+              exit 0
+            fi
+            sleep 1
+          done
+          
+          echo "❌ Container failed to become healthy in 30s"
+          docker logs test-container
+          docker stop test-container
+          docker rm test-container
+          exit 1
