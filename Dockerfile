@@ -29,8 +29,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy the requirements file first to leverage Docker cache
 COPY requirements.txt .
 
-# Install Python dependencies (CPU-only PyTorch from the extra index)
-RUN pip install --no-cache-dir -r requirements.txt
+# Upgrade pip and pre-install setuptools (openai-whisper's setup.py needs pkg_resources)
+RUN pip install --no-cache-dir --upgrade pip setuptools
+
+# Install Python dependencies (--no-build-isolation so setuptools/pkg_resources is available)
+RUN pip install --no-cache-dir --no-build-isolation -r requirements.txt
 
 # Pre-download the Whisper 'tiny' model at build time (~39MB)
 # This avoids a cold-start download on the first request
