@@ -280,6 +280,7 @@ class CaptionBurner:
             "-i", str(video_path),
             "-vf", drawtext_filter,
             "-c:v", "libx264",
+            "-pix_fmt", "yuv420p",
             "-preset", "ultrafast",
             "-crf", "28",
             "-threads", "2",

@@ -412,7 +412,7 @@ async function loadResults(videoId) {
     // Build video source URLs
     const styles = ['formal', 'sarcastic', 'humorous_tech', 'humorous_non_tech'];
     styles.forEach((style) => {
-      state.videoSources[style] = `${API_BASE}/video/${videoId}/${style}`;
+      state.videoSources[style] = `${API_BASE}/video/${videoId}/${style}?t=${Date.now()}`;
     });
 
     // Render the UI
@@ -1012,7 +1012,7 @@ function handleQuadrantDownload(e) {
     ? state.fileName.replace(/\.[^.]+$/, `_${style}.mp4`)
     : `${state.videoId}_${style}.mp4`;
 
-  triggerDownload(`${API_BASE}/download/${state.videoId}/${style}`, fileName);
+  triggerDownload(`${API_BASE}/download/${state.videoId}/${style}?t=${Date.now()}`, fileName);
 }
 
 /**
