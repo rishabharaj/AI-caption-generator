@@ -10,8 +10,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  # This results in: ghcr.io/rishabharaj/ai-caption-generator
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-push:
@@ -23,6 +21,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      # Lowercase the image name (Docker requires all-lowercase)
+      - name: Set lowercase image name
+        run: echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
       # Set up Docker Buildx (highly recommended for modern docker builds)
       - name: Set up Docker Buildx
@@ -95,3 +97,4 @@ jobs:
           docker stop test-container
           docker rm test-container
           exit 1
+
