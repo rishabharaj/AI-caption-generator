@@ -25,6 +25,11 @@ SYSTEM_PROMPTS: dict[str, str] = {
         "in 2-3 sentences (100 words maximum). Use formal, objective, and eloquent "
         "language with proper grammar, sophisticated vocabulary, and a neutral tone. "
         "Focus on the key events, actions, and visual elements described.\n\n"
+        "MUTE/SILENT VIDEO RULE: If the video has no speech or transcript, you MUST "
+        "still write a rich, evocative caption. Describe the visual atmosphere, "
+        "movement, composition, setting, and mood as a documentary narrator would. "
+        "Write as though you are narrating a nature documentary or a cinematic montage. "
+        "Never say you lack information or cannot describe the video.\n\n"
         "CRITICAL RULES:\n"
         "- Output ONLY the final caption text.\n"
         "- Maximum 100 words. Be concise.\n"
@@ -32,12 +37,16 @@ SYSTEM_PROMPTS: dict[str, str] = {
         "labels, or meta-commentary.\n"
         "- Do NOT reference the prompt, frames, or instructions.\n"
         "- Do NOT start with phrases like 'Analyze', 'The prompt says', or 'Let me'.\n"
+        "- Do NOT say you have no information, no context, or cannot describe the video.\n"
         "- Just write the caption directly as a documentary narrator would speak it."
     ),
     "sarcastic": (
         "You are a witty, sarcastic commentator. Write a dry, ironic caption "
         "about this video. Use understated humor, subtle mockery, and a deadpan "
         "tone. Make it clever but not mean-spirited. 1-2 sentences, 100 words max.\n\n"
+        "MUTE/SILENT VIDEO RULE: If the video has no speech, lean into the silence. "
+        "Make a witty remark about the visual-only content — the mood, the aesthetic, "
+        "the cinematic choices. Never complain about lacking information.\n\n"
         "CRITICAL: Output ONLY the caption text. No analysis, no reasoning, "
         "no labels, no meta-commentary."
     ),
@@ -46,6 +55,9 @@ SYSTEM_PROMPTS: dict[str, str] = {
         "to startups, programming, AI, Silicon Valley culture, or geek life. "
         "Use tech jargon humorously. Make it relatable to developers and tech "
         "enthusiasts. 1-2 sentences, 100 words max.\n\n"
+        "MUTE/SILENT VIDEO RULE: If the video has no speech, riff on the silence "
+        "with tech humor — buffering jokes, muted microphones, silent deployments, "
+        "or the aesthetic of the visuals. Never say you lack context.\n\n"
         "CRITICAL: Output ONLY the caption text. No analysis, no reasoning, "
         "no labels, no meta-commentary."
     ),
@@ -54,6 +66,9 @@ SYSTEM_PROMPTS: dict[str, str] = {
         "that anyone can understand. No tech jargon. Use observational humor, "
         "pop culture references, or witty wordplay. Keep it light and universally "
         "funny. 1-2 sentences, 100 words max.\n\n"
+        "MUTE/SILENT VIDEO RULE: If the video has no speech, use the silence as "
+        "comedy material — comment on the mood, the visual vibe, or the artistic "
+        "choices. Never say you have no information.\n\n"
         "CRITICAL: Output ONLY the caption text. No analysis, no reasoning, "
         "no labels, no meta-commentary."
     ),
@@ -97,6 +112,10 @@ class FireworksClient:
         """
         Build the user prompt from transcript and visual context.
 
+        Handles mute videos specially by providing rich guidance so the LLM
+        generates meaningful captions even without speech or detailed
+        visual descriptions.
+
         Args:
             transcript: The transcribed audio text.
             visual_context: List of visual frame descriptions.
@@ -106,28 +125,57 @@ class FireworksClient:
         """
         parts = []
 
-        if transcript and transcript.strip():
+        has_transcript = bool(transcript and transcript.strip())
+
+        if has_transcript:
             parts.append(f"Video transcript: {transcript.strip()}")
         else:
-            parts.append("Video transcript: [No speech detected — mute video]")
+            parts.append("This is a silent/mute video with no spoken dialogue.")
 
         # Filter out placeholder/empty visual context entries
         meaningful_context = [
             ctx for ctx in (visual_context or [])
-            if ctx and "visual content from video" not in ctx.lower()
+            if ctx
+            and "visual content from video" not in ctx.lower()
+            and not ctx.strip().lower().startswith("frame")
+            or (
+                ctx
+                and ctx.strip().lower().startswith("frame")
+                and len(ctx.split(":", 1)) > 1
+                and len(ctx.split(":", 1)[1].strip()) > 30
+            )
         ]
+
         if meaningful_context:
             ctx = "; ".join(meaningful_context[:10])
             parts.append(f"Visual context: {ctx}")
         else:
-            parts.append(
-                f"Visual context: Video contains {len(visual_context or [])} frames"
-            )
+            # Provide rich guidance for the LLM when visual descriptions are
+            # generic placeholders (e.g. "Frame 1: visual content from video")
+            frame_count = len(visual_context or [])
+            if not has_transcript:
+                # Fully mute video with no meaningful visual descriptions —
+                # give the LLM maximum creative direction
+                parts.append(
+                    f"The video consists of {frame_count} visual frames. "
+                    "Since this is a visual-only video, focus on the cinematic "
+                    "qualities: the movement, lighting, composition, atmosphere, "
+                    "color palette, and overall mood conveyed by the imagery. "
+                    "Imagine the scenes and write as if you are watching a "
+                    "beautifully composed visual montage."
+                )
+            else:
+                parts.append(
+                    f"Visual context: The video contains {frame_count} "
+                    "visual frames accompanying the spoken content."
+                )
 
         parts.append(
             "\nWrite a caption for this video. "
             "Return ONLY the caption text — no reasoning, no bullet points, "
-            "no analysis, no labels, no quotes, no explanations."
+            "no analysis, no labels, no quotes, no explanations. "
+            "Do NOT mention that you lack information or visual details. "
+            "Write a confident, complete caption."
         )
 
         return "\n".join(parts)
@@ -258,6 +306,12 @@ class FireworksClient:
             "**Input:", "* **", "**Correction", "Let me re-read",
             "Let's re-read", "Let's try", "Let me refine",
             "Wait,", "-> This is",
+            # Mute-video meta-commentary patterns
+            "I cannot describe", "I can't describe", "no visual context",
+            "without seeing", "no information provided", "haven't actually",
+            "nothing has been described", "cannot write a meaningful",
+            "no actual description", "not provided any visual",
+            "The user wants me to", "The transcript says",
         ]
 
         has_reasoning = any(marker in text for marker in reasoning_markers)
