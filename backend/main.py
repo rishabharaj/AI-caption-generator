@@ -118,12 +118,17 @@ app.include_router(api_router)
 async def health_check():
     """Health check endpoint."""
     from backend.utils.ffmpeg_utils import is_ffmpeg_available, is_ffprobe_available
+    from backend.services.whisper_client import WhisperClient
+    whisper_client = WhisperClient()
     return {
         "status": "healthy",
         "app": settings.app_name,
         "version": settings.app_version,
         "ffmpeg_available": is_ffmpeg_available(),
         "ffprobe_available": is_ffprobe_available(),
+        "whisper_available": whisper_client.is_available(),
+        "whisper_model": settings.whisper.model_name,
+        "stt_mode": "local_whisper",
     }
 
 

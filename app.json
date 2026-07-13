@@ -1,6 +1,6 @@
 {
   "name": "vdcap-ai",
-  "description": "Vdcap.AI — 4-Style Video Captioning Platform powered by Fireworks AI and FFmpeg.",
+  "description": "Vdcap.AI — 4-Style Video Captioning Platform powered by Fireworks AI, local Whisper STT, and FFmpeg.",
   "repository": "https://github.com/rishabharaj/AI-caption-generator",
   "logo": "https://raw.githubusercontent.com/rishabharaj/AI-caption-generator/main/frontend/favicon.svg",
   "keywords": ["fastapi", "python", "ffmpeg", "whisper", "caption-generator", "fireworks-ai"],
@@ -11,5 +11,21 @@
     {
       "url": "heroku/python"
     }
-  ]
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "standard-2x"
+    }
+  },
+  "env": {
+    "FIREWORKS_API_KEY": {
+      "description": "Fireworks AI API key for caption generation",
+      "required": true
+    },
+    "OMP_NUM_THREADS": {
+      "description": "OpenMP threads for PyTorch (keep low for Heroku)",
+      "value": "2"
+    }
+  }
 }

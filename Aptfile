@@ -16,3 +16,4 @@ libva-drm2
 libva-x11-2
 libvdpau1
 libdrm2
+libgomp1

@@ -56,7 +56,7 @@ storage:
 
 
 whisper:
-  model_name: "base"  # tiny, base, small, medium, large, turbo
+  model_name: "tiny"  # tiny is optimal for Heroku 1GB RAM (~39MB, ~32x real-time on CPU)
 
   language: null  # null = auto-detect
   sample_rate: 16000
