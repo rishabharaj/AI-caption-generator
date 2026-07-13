@@ -5,11 +5,6 @@ FROM python:3.10-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8000
-# Whisper model cache directory — persists across requests within a dyno
-ENV WHISPER_CACHE_DIR=/app/.whisper_cache
-ENV XDG_CACHE_HOME=/app/.whisper_cache
-# Force CPU-only PyTorch (no CUDA overhead)
-ENV CUDA_VISIBLE_DEVICES=""
 
 # Set the working directory in the container
 WORKDIR /app
@@ -29,21 +24,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy the requirements file first to leverage Docker cache
 COPY requirements.txt .
 
-# Upgrade pip and pre-install setuptools (openai-whisper's setup.py needs pkg_resources)
-RUN pip install --no-cache-dir --upgrade pip setuptools
-
-# Install Python dependencies (--no-build-isolation so setuptools/pkg_resources is available)
-RUN pip install --no-cache-dir --no-build-isolation -r requirements.txt
-
-# Pre-download the Whisper 'tiny' model at build time (~39MB)
-# This avoids a cold-start download on the first request
-RUN python -c "import whisper; whisper.load_model('tiny', device='cpu')"
+# Install Python dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
 
 # Create directory for temporary uploads/outputs and ensure it is writeable
-RUN mkdir -p temp uploads outputs frames audio .whisper_cache && chmod -R 777 temp uploads outputs frames audio .whisper_cache
+RUN mkdir -p temp uploads outputs frames audio && chmod -R 777 temp uploads outputs frames audio
 
 # Expose the port the app runs on
 EXPOSE 8000
