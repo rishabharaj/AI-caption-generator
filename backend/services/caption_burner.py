@@ -80,9 +80,12 @@ class CaptionBurner:
         video_width = info.get("width", 1920)
         video_height = info.get("height", 1080)
 
-        # Calculate max chars per line based on video width and font size
+        # Scale font size dynamically based on video height (4.5% of height, min 24px)
+        dynamic_font_size = max(self.font_size, int(video_height * 0.045))
+
+        # Calculate max chars per line based on video width and dynamic font size
         # Approximate: each char is ~0.6 * font_size pixels wide
-        char_width = self.font_size * 0.6
+        char_width = dynamic_font_size * 0.6
         max_pixel_width = video_width * self.max_text_width
         max_chars = int(max_pixel_width / char_width)
         max_chars = max(20, min(max_chars, 80))  # Clamp between 20-80
@@ -108,6 +111,7 @@ class CaptionBurner:
                 video_width=video_width,
                 video_height=video_height,
                 max_chars_per_line=max_chars,
+                font_size=dynamic_font_size,
                 transcript_segments=transcript_segments,
                 bottom_padding=bottom_padding,
             )
@@ -148,6 +152,7 @@ class CaptionBurner:
         video_height: int = 1080,
         max_chars_per_line: int = 50,
         font_file: Optional[str] = None,
+        font_size: Optional[int] = None,
         transcript_segments: Optional[list] = None,
         bottom_padding: Optional[float] = None,
     ) -> Path:
@@ -162,6 +167,7 @@ class CaptionBurner:
             video_height: Video height in pixels.
             max_chars_per_line: Max characters per line for wrapping.
             font_file: Override font file path.
+            font_size: Override font size in pixels.
             transcript_segments: Optional list of Whisper transcript segments.
 
         Returns:
@@ -224,6 +230,7 @@ class CaptionBurner:
                 "and committed to Git so it is uploaded to production."
             )
         font_exists_path = str(font_path)
+        size = font_size or self.font_size
 
         if total_words > 0 and len(lines) > 0:
             current_time = start_time
@@ -235,68 +242,33 @@ class CaptionBurner:
                 # Deduct a clean 0.1s offset to prevent overlapping boundaries (standard subtitle gap)
                 line_end_clamped = max(current_time + 0.15, line_end - 0.10)
 
-                # 0.3s fade-in/out transitions (scaled if duration is very short)
-                fade_dur = min(0.3, (line_end_clamped - current_time) / 3.0)
-                if fade_dur < 0.05:
-                    fade_dur = 0.05
-
-                # Pre-calculate time limits in Python to keep FFmpeg filter expressions simple and safe
-                fade_in_end = current_time + fade_dur
-                fade_out_start = line_end_clamped - fade_dur
-
-                # Clamped alpha formula (fully transparent outside active segment range)
-                alpha_expr = (
-                    f"if(lt(t,{current_time:.3f}),0.0,"
-                    f"if(gt(t,{line_end_clamped:.3f}),0.0,"
-                    f"if(lt(t,{fade_in_end:.3f}),(t-{current_time:.3f})/{fade_dur:.3f},"
-                    f"if(gt(t,{fade_out_start:.3f}),({line_end_clamped:.3f}-t)/{fade_dur:.3f},1.0))))"
-                )
-
                 wrapped_text = wrap_text(line, max_chars_per_line)
                 drawtext = build_drawtext_filter(
                     text=wrapped_text,
                     font_file=font_exists_path,
-                    font_size=self.font_size,
+                    font_size=size,
                     font_color=self.font_color,
                     border_width=self.border_width,
                     border_color=self.border_color,
                     video_width=video_width,
                     video_height=video_height,
                     enable=f"between(t,{current_time:.3f},{line_end_clamped:.3f})",
-                    alpha=alpha_expr,
                     bottom_padding=bottom_padding,
                 )
                 filters.append(drawtext)
                 current_time = line_end
         else:
-            # Fallback to single static overlay with a 0.5s fade-in/fade-out
-            info = await get_video_info(video_path)
-            duration = info.get("duration", 10.0)
-            fade_dur = min(0.5, duration / 2.0)
-            if fade_dur < 0.05:
-                fade_dur = 0.05
-
-            fade_out_start = duration - fade_dur
-
-            # Clamped alpha formula for static fallback
-            alpha_expr = (
-                f"if(lt(t,0.0),0.0,"
-                f"if(gt(t,{duration:.3f}),0.0,"
-                f"if(lt(t,{fade_dur:.3f}),t/{fade_dur:.3f},"
-                f"if(gt(t,{fade_out_start:.3f}),({duration:.3f}-t)/{fade_dur:.3f},1.0))))"
-            )
-
+            # Fallback to single static overlay
             wrapped_text = wrap_text(caption_text, max_chars_per_line)
             drawtext = build_drawtext_filter(
                 text=wrapped_text,
                 font_file=font_exists_path,
-                font_size=self.font_size,
+                font_size=size,
                 font_color=self.font_color,
                 border_width=self.border_width,
                 border_color=self.border_color,
                 video_width=video_width,
                 video_height=video_height,
-                alpha=alpha_expr,
                 bottom_padding=bottom_padding,
             )
             filters.append(drawtext)
