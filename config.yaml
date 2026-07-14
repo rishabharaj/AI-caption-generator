@@ -12,7 +12,7 @@ server:
 
 video:
   max_file_size_mb: 500
-  min_duration_seconds: 30
+  min_duration_seconds: 1
   max_duration_seconds: 120
   allowed_formats:
     - ".mp4"

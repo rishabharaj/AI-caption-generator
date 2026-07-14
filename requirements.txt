@@ -17,9 +17,7 @@ requests==2.32.3
 # YAML Configuration
 pyyaml==6.0.2
 
-# Video/Audio Processing
-opencv-python-headless==4.10.0.84
-Pillow==11.1.0
+# Video/Audio Processing (ffmpeg is installed at the OS level via Dockerfile)
 
 # Speech Recognition (using OpenAI Whisper API directly)
 

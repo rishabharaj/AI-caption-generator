@@ -47,11 +47,11 @@ RUN mkdir -p temp uploads outputs frames audio && chmod -R 777 temp uploads outp
 EXPOSE 8000
 
 # HEALTHCHECK so Docker/automation knows when the app is ready
-# Checks every 5s, gives 3s timeout per check, starts after 5s, fails after 3 retries
-HEALTHCHECK --interval=5s --timeout=3s --start-period=5s --retries=3 \
+# Checks every 10s, gives 5s timeout per check, starts after 30s, fails after 5 retries
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=5 \
     CMD curl -f http://localhost:${PORT}/health || exit 1
 
-# Run the application using uvicorn with fast startup settings
+# Run the application using uvicorn with production settings
 # --timeout-keep-alive 5: reduce keep-alive for faster recycling
 # --limit-max-requests 1000: recycle workers to prevent memory leaks
 # --timeout-graceful-shutdown 5: shut down quickly
