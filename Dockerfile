@@ -55,4 +55,4 @@ HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=5 \
 # --timeout-keep-alive 5: reduce keep-alive for faster recycling
 # --limit-max-requests 1000: recycle workers to prevent memory leaks
 # --timeout-graceful-shutdown 5: shut down quickly
-CMD uvicorn backend.main:app --host 0.0.0.0 --port ${PORT} --timeout-keep-alive 5 --limit-max-requests 1000 --timeout-graceful-shutdown 5
+CMD ["sh", "-c", "exec uvicorn backend.main:app --host 0.0.0.0 --port ${PORT} --timeout-keep-alive 5 --limit-max-requests 1000 --timeout-graceful-shutdown 5"]
